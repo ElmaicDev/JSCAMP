@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>DevJobs - Empleos</title>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="Resultados de búsqueda de empleos en DevJobs"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="/02-JAVA_SCRIPT/script.js" >
+    </script>
+  </head>
+  <body>
+    <header>
+            <h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-affiliate"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275" /><path d="M11.683 12.317l5.759 -5.759" /><path d="M5.5 5.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M18.5 5.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M18.5 18.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M8.5 15.5m-4.5 0a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0" /></svg>
+                DevJobs
+            </h1>
+            <nav>
+                <a href="./index.html">Inicio</a>
+                <a href="./empleos.html">Empleos</a>
+                <a href="">Contacto</a>
+            </nav>
+            <div>
+                <a href="">Subir CV</a>
+                <img src="./images/Yo.jpg" alt="Avatar Image">
+            </div>
+        </header>
+    <main class="mainResults">
+      <section>
+            <h1>Encuentra tu próximo Tabajo</h1>
+            <p>Explora las últimas ofertas de empleo en el sector tecnológico y encuentra la oportunidad perfecta para ti.</p>
+            <form role="search" id="empleos-search-form">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                        <input id="empleos-search-input" type="text" placeholder="Buscar empleos por título, habilidad o empresa" />
+                    </div>
+                    <div class="filtros">
+                        <select  name = "ubicacion" id="filter-location">
+                            <option value="">Ubicación</option>
+                            <option value="oficina">Oficina</option>
+                            <option value="remoto">Remoto</option>
+                            <option value="hibrido">Híbrido</option>
+                        </select>
+                        <select name="tipo-contrato" id="filter-contract">
+                            <option value="" >Tipo de contrato</option>
+                            <option value="indefinido">Indefinido</option>
+                            <option value="temporal">Temporal</option>
+                            <option value="freelance">Freelance</option>
+                        </select>
+                        <select name="tecnología" id="filter-tecnology">
+                            <option value="" >Tecnología</option>
+                            <option value="javaScript">javaScript</option>
+                            <option value="c#">C#</option>
+                            <option value="html">HTML</option>
+                        </select>
+                        <select name="experiencia" id="filter-experience">
+                            <option value="">Experiencia</option>
+                            <option value="junior">Junior</option>
+                            <option value="mid-level">Mid-Level</option>
+                            <option value="senior">Senior</option>
+                         </select>
+                </div>
+                </form>
+        </section> 
+        <section class="results">
+                <h2>Resultados de Búsqueda</h2>
+                <p>Mostrando resultados para: "Desarrollador Web"</p>
+                <!-- Aquí irían los resultados de búsqueda -->
+            
+                <div class="job-listings">
+                    <article >
+                        <div>
+                            <h3>Ingeniero de Software</h3>
+                            <small> Tech Solutions inc | Remoto</small>
+                            <p>Buscamos un ingeniero de software con experiencia en desarrollo web y móvil...</p>
+                        </div>
+                        <button  class="button-apply-job">Aplicar</button>
+                    </article>
+                    <article >
+                        <div>
+                            <h3>Analista De Datos</h3>
+                            <small> Data Driven Co. | Medellín</small>
+                            <p>Estamos buscando un analista de datos con experiencia en python, SQL y R.</p>
+                        </div>
+                        <button class="button-apply-job">Aplicar</button>
+                    </article>
+                    <article >
+                        <div>
+                            <h3>Ingeniero de Software</h3>
+                            <small> Tech Solutions inc | Remoto</small>
+                            <p>Buscamos un ingeniero de software con experiencia en desarrollo web y móvil...</p>
+                        </div>
+                        <button class="button-apply-job">Aplicar</button>
+                    </article>
+                    <article >
+                        <div>
+                            <h3>Ingeniero de Software</h3>
+                            <small> Tech Solutions inc | Remoto</small>
+                            <p>Buscamos un ingeniero de software con experiencia en desarrollo web y móvil...</p>
+                        </div>
+                        <button class="button-apply-job">Aplicar</button>
+                    </article>
+                </div>
+
+                <nav class="pagination">                
+                    <a href="#">&laquo; </a>
+                    <a class="is-active" href="#" >1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#"> &raquo;</a>
+                </nav>
+        
+        
+      </section>
+
+      
+      <footer>
+            <small>Todos los derechos reservados DevJobs JSCAMP &copy; 2025</small>
+        </footer>
+    </main>
+  </body>
