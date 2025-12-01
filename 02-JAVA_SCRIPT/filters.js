@@ -21,3 +21,35 @@ filterLocation.addEventListener('change',function(){
     
     })
 })
+
+const filterTechnology = document.querySelector('#filter-technology')
+filterTechnology.addEventListener('change',function(){
+    
+    const jobs =document.querySelectorAll('.job-listing-cards')
+    const selectedValue = filterTechnology.value.toLowerCase()
+    jobs.forEach(job => {
+        // const modalidad = job.dataset.modalidad
+        const techString = job.getAttribute('data-tecnologia')
+        const tecnologias = techString.split(",");
+        console.log(tecnologias)
+        const isShown = selectedValue === '' || tecnologias.includes(selectedValue)
+        job.classList.toggle('is-hidden',!isShown)
+    
+    })
+})
+
+
+
+const filterExperience = document.querySelector('#filter-experience-level')
+filterExperience.addEventListener('change',function(){
+    
+    const jobs =document.querySelectorAll('.job-listing-cards')
+    const selectedValue = filterExperience.value
+    jobs.forEach(job => {
+        // const modalidad = job.dataset.modalidad
+        const experiencia = job.getAttribute('data-experiencia')
+        const isShown = selectedValue === '' || selectedValue === experiencia
+        job.classList.toggle('is-hidden',!isShown)
+    
+    })
+})
