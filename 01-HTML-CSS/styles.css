@@ -307,7 +307,7 @@ article{
     padding-top: 2rem;
     align-items: center;
 
-    article{
+    .job-listing-cards{
         display: grid;
         grid-template-columns: 1fr auto;
         background-color: var(--card-bg);
