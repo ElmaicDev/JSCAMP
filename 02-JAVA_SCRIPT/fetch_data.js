@@ -1,6 +1,7 @@
 const container = document.querySelector('.job-listings')
 
-fetch("/02-JAVA_SCRIPT/data.json")
+
+fetch("/02-JAVA_SCRIPT/data copy.json")
 .then((response) =>{
     return response.json();
 })

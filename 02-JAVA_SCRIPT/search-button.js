@@ -8,7 +8,7 @@ searchFilter.addEventListener('input', function(event){
         
         const titulo = job.querySelector('h3').textContent
         
-        const isShown = search === '' || titulo.includes(search)
+        const isShown = search === '' || titulo.toLowerCase().includes(search.toLowerCase())
         job.classList.toggle('is-hidden',!isShown)
     });
         

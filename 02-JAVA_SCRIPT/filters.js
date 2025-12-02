@@ -31,7 +31,7 @@ filterTechnology.addEventListener('change',function(){
         // const modalidad = job.dataset.modalidad
         const techString = job.getAttribute('data-tecnologia')
         const tecnologias = techString.split(",");
-        console.log(tecnologias)
+        console.log(selectedValue)
         const isShown = selectedValue === '' || tecnologias.includes(selectedValue)
         job.classList.toggle('is-hidden',!isShown)
     
