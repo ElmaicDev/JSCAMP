@@ -21,17 +21,50 @@
     </script> 
     <script type="text/babel">
         
-        function Saludo({nombre}){
-            //para que funcione como componente de react, esta función debe ser mayúscula.
-            return <h2 style={{color:"#09f"}}>Hola, {nombre}</h2>;
-        }
 
+        function JobCard({data,titulo, empresa, ubicacion,descripcion}){
+            //se llama desestructuración y el método useState es un hook
+            const [
+                isApplied,
+                setIsApplied
+            ] = React.useState(false) // Esto devuelve un array con dos posiciones
+
+            const text = isApplied ? 'Aplicado!' : "Aplicar"
+            const buttonClass = isApplied ? 'is-applied' : ''
+
+            function handleClick(){
+                setIsApplied(!isApplied)
+            }
+            return(
+                <article 
+                    className="job-listing-cards"
+                    data-modalidad = {data.modalidad}
+                    data-experiencia = {data.nivel}
+                    data-technology = {data.technology}
+                >
+                    <div>
+                        <h3>{titulo}</h3>
+                        <small>{empresa} | {ubicacion}</small>
+                        <p>{descripcion}</p>
+                    </div>
+                    <button 
+                    className={`button-apply-job ${buttonClass}`}
+                    onClick = {handleClick}>{text}</button>
+                </article>
+            )
+
+        }
+        //REACT USA EL VIRTUAL DOM Y RENDERIZA LOS COMPONENTES SIEMPRE QUE SE USA O SE INICIA LA PÁGINA, Y DETECTA CUÁL ES EL CAMBIO ESPECÍFICO QUE NECESITA HACER Y CAMBIA ESE ÚNICO ELEMENTO
         function App(){
             return (
-                <div>
-                    <Saludo nombre="midudev"/>
-                    <Saludo nombre="maicol"/>
-                    <Saludo nombre="melissa"/>
+                <div className="job-listings">
+                    <JobCard 
+                        titulo = "Desarrollador/a frontend react.js"
+                        empresa = "Tech Solutions"
+                        ubicacion = "Remoto"
+                        descripcion = "blablablablablabalbalabalbalabalabalablabla"
+                        data = {{modalidad:"remoto", nivel:"junior", technology:"react"}}
+                    />
                 </div>
             )
         }
@@ -62,13 +95,14 @@
             </div>
         </header>
     <main >
-      <section class="job-search">
-            <h1>React.js, primeros pasos.</h1>
-            <div id="react-root"></div>
-                
-                
+        <section class="job-search">
+            <h1>React.js, primeros pasos.</h1>    
         </section> 
       
+        <section>
+            <h2>Empleos Disponibles</h2>
+            <div id="react-root"></div>
+        </section>
 
       
       <footer>
