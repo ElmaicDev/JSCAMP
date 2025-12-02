@@ -8,18 +8,37 @@
       content="Resultados de búsqueda de empleos en DevJobs"
     />
     <link rel="stylesheet" href="/01-HTML-CSS/styles.css" />
+
     <script type="module">
         import React from "https://esm.sh/react?dev" // núcleo de react
         import ReactDOM from "https://esm.sh/react-dom/client?dev" //Permite renderizar la app en una página web
-        const titulo = React.createElement(
-            "h1",
-            {style:{color:'#09f'}},
-            "Hola, React.js!"
-        )
+        
+        window.React = React
+        window.ReactDOM = ReactDOM
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js">
+        // Esta biblioteca lo que hace es convertir el texto a jsx 
+    </script> 
+    <script type="text/babel">
+        
+        function Saludo({nombre}){
+            //para que funcione como componente de react, esta función debe ser mayúscula.
+            return <h2 style={{color:"#09f"}}>Hola, {nombre}</h2>;
+        }
+
+        function App(){
+            return (
+                <div>
+                    <Saludo nombre="midudev"/>
+                    <Saludo nombre="maicol"/>
+                    <Saludo nombre="melissa"/>
+                </div>
+            )
+        }
 
         const rootElem = document.querySelector('#react-root')
         const root = ReactDOM.createRoot(rootElem)
-        root.render(titulo)
+        root.render(<App/>)
 
     </script>
   </head>
