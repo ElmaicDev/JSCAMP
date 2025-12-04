@@ -1,4 +1,5 @@
-function Pagination ({currentPage = 1,totalPages = 1}){
+import styles from "./Pagination.module.css"
+function Pagination ({currentPage = 2,totalPages = 5, onPageChange}){
 
     //Generar array de páginas
     const pages = Array.from({length:totalPages}, (_,index) => index + 1)
@@ -9,10 +10,29 @@ function Pagination ({currentPage = 1,totalPages = 1}){
     const stylePrevButton = isFirstPage ? {pointerEvents:'none', opacity:0.5}:{}
     const styleNextButton = isLastPage ? {pointerEvents:'none', opacity:0.5}:{}
 
+    const handlePrevClick = (event) => {
+        event.preventDefault()
+        if(!isFirstPage){
+            onPageChange(currentPage - 1)
+        }
+    }
+    const handleNextClick = (event) => {
+        event.preventDefault()
+        if(!isLastPage){
+            onPageChange(currentPage + 1)
+        }
+    }
+
+    const handleChangePage = (event,page) =>{
+        if(page !== currentPage){
+            (onPageChange(page))
+        }
+    }
+
     return(
 
-        <nav className="pagination">
-            //#region RENDERIZADO CONDICIONAL
+        <nav className={styles.pagination}>
+            {/* //#region RENDERIZADO CONDICIONAL */}
             {/* {
                 !isFirstPage && (
                     <a href="#" style={stylePrevButton}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -23,8 +43,7 @@ function Pagination ({currentPage = 1,totalPages = 1}){
                     )
                     ESTO ES LO QUE SE LLAMA RENDERIZADO CONDICIONAL
                     } */}
-            //#endregion
-        <a href="#" style={stylePrevButton}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+        <a href="#" style={stylePrevButton} onClick={handlePrevClick}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
             strokeLinecap="round" strokeLinejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
             <path d="M15 6l-6 6l6 6" />
@@ -32,8 +51,10 @@ function Pagination ({currentPage = 1,totalPages = 1}){
 
         {pages.map(page => (
             <a 
+            key={page} // Esta key identifica al elemento para tenerlo con un marcador único, y poder buscarlo fácilmente, es un identificador único
             href="#"
-            className={currentPage === page ? 'is-active' : ''}>
+            className={currentPage === page ? styles.isActive : ''}
+            onClick={(event) => handleChangePage(event,page)}>
                     
                 {page}
 
@@ -41,7 +62,7 @@ function Pagination ({currentPage = 1,totalPages = 1}){
         ))}
 
 
-        <a href="#" style={styleNextButton}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
+        <a href="#" style={styleNextButton} onClick={handleNextClick}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
             strokeLinecap="round" strokeLinejoin="round"
             className="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right">
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />

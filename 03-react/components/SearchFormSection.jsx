@@ -1,18 +1,27 @@
+import { useId } from "react" //Es usado para crear identificadores únicos, útil sobre todo en formularios para cuando la app sea muy grande no correr el riesgo de reutilizar nombres
 function SearchFormSection(){
+    const searchId = useId()
+    const technologyId = useId()
+    const locationId = useId()
+    const experienceId = useId()
+    const handleSubmit = (event) => {
 
+        event.preventDefault()
+    }
+    
 
     return (
         
       <section>
             <h1>Encuentra tu próximo Tabajo</h1>
             <p>Explora las últimas ofertas de empleo en el sector tecnológico y encuentra la oportunidad perfecta para ti.</p>
-            <form role="search" id="empleos-search-form">
+            <form onSubmit={handleSubmit} role="search" id="empleos-search-form">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                        <input id="empleos-search-input" type="text" placeholder="Buscar empleos por título, habilidad o empresa" />
+                        <input name={searchId} id="empleos-search-input" type="text" placeholder="Buscar empleos por título, habilidad o empresa" />
                     </div>
                     <div className="filtros">
-                        <select name="technology" id="filter-technology">
+                        <select name={technologyId} id="filter-technology">
                         <option value="">Tecnología</option>
                         <optgroup label="Tecnologías populares">
                         <option value="javascript">JavaScript</option>
@@ -30,7 +39,7 @@ function SearchFormSection(){
                         <option value="php">PHP</option>
                     </select>
 
-                    <select name="location" id="filter-location">
+                    <select name={locationId} id="filter-location">
                         <option value="">Ubicación</option>
                         <option value="remoto">Remoto</option>
                         <option value="cdmx">Ciudad de México</option>
@@ -39,7 +48,7 @@ function SearchFormSection(){
                         <option value="barcelona">Barcelona</option>
                     </select>
 
-                    <select name="experience-level" id="filter-experience-level">
+                    <select name={experienceId} id="filter-experience-level">
                         <option value="">Nivel de experiencia</option>
                         <option value="junior">Junior</option>
                         <option value="mid">Mid-level</option>

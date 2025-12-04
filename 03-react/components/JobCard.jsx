@@ -1,6 +1,6 @@
 import React from "react"
 
-function JobCard({data,empresa,titulo,descripcion}){
+function JobCard({job}){
 
         const [
                 isApplied,
@@ -19,13 +19,13 @@ function JobCard({data,empresa,titulo,descripcion}){
 
         <article 
             className="job-listing-cards"
-            data-modalidad={data.modalidad}
-            data-experiencia={data.nivel}
-            data-technology = {data.technology}>
+            data-modalidad={job.data.modalidad}
+            data-experiencia={job.data.nivel}
+            data-technology = {job.data.technology}>
             <div>
-                <h2>{titulo}</h2>
-                <small>{empresa} | {data.modalidad}</small>
-                <p>{descripcion}</p>
+                <h2>{job.titulo}</h2>
+                <small>{job.empresa} | {job.data.modalidad}</small>
+                <p>{job.descripcion}</p>
             </div>
             <button className={`button-apply-job ${buttonClass}`}
             onClick={handleClick}>{text}</button>
