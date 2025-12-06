@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect,useState } from "react"
 import SearchFormSection from "../components/SearchFormSection.jsx"
 import Job_Listing from "../components/Job_Listings.jsx" //se puede cambiar el nombre como {Job_Listing as Job}
 import Pagination from "../components/Pagination.jsx"
@@ -35,6 +35,7 @@ export function SearchPage() {
         setCurrentPage(page)
     }
 
+        
     const handleSearch = (filters) => {
         setCurrentPage(1)
         setFilters(filters)
@@ -45,6 +46,33 @@ export function SearchPage() {
         setTextToFilter(newTextToFilter.toLowerCase()) 
         setCurrentPage(1)
     }
+
+    // el efecto se llama por defecto cuando se renderiza el componente, cuando está solo, y recibe un segundo parámetro para decirle cuándo se va a ejecutar. 
+    //Si se envía un array vacío como segundo parámetro, se ejecuta solo una sola vez. Cada efecto se ejecuta al menos una vez.
+    //TENER CUIDADO DE GENERAR UN BUCLE INFINITO PORQUE SE PUEDE EJECUTAR INFINITAMENTE LO QUE ESTÁ DENTRO DEL USE STATE.
+    //SE TIENE QUE DOMINAR EL ARRAY DE DEPENDENCIAS PARA NO CREAR EL CICLO INFINITO (Es el array que pasa como segundo parámetro.)
+    useEffect(()=> { 
+
+
+    },[currentPage]) // Esto le dice que cada que cambie de página se va a ejecutar el efecto, y renderiza el componente.
+    // El use effect se usa sobre todo para FETCHING de datos (si no se usan otras dependencias)
+    // Se usa también cuando cambia el tamaño de la ventana, para obtener el tamaño y eso.
+
+    useEffect(()=> {
+            const handleResize =  () => {
+            console.log('cambiando tamaño')
+            console.log(window.innerHeight,window.innerWidth)
+        }
+
+        window.addEventListener('resize',handleResize)
+
+        return () => {
+            window.removeEventListener('resize',handleResize) // Esto lo que hace directamente es eliminar los eventos que se alamacenaron para no ocupar innecesariamente memoria
+        }
+
+    }, [])
+
+
 
   return (
     <>
