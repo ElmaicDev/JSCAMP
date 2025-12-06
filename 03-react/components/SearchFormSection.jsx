@@ -1,5 +1,5 @@
 import { useId } from "react" //Es usado para crear identificadores únicos, útil sobre todo en formularios para cuando la app sea muy grande no correr el riesgo de reutilizar nombres
-function SearchFormSection(){
+function SearchFormSection({onSearch, onTextFilter}){
     const searchId = useId()
     const technologyId = useId()
     const locationId = useId()
@@ -7,8 +7,24 @@ function SearchFormSection(){
     const handleSubmit = (event) => {
 
         event.preventDefault()
+
+        const formData = new FormData(event.target)
+
+        //De esta forma filters va a estar guardando la información de cada filtro aplicado
+        const filters = {
+            search: formData.get(searchId),
+            technology: formData.get(technologyId),
+            location: formData.get(locationId),
+            experience: formData.get(experienceId)
+        }
+
+        onSearch(filters)
     }
     
+    const handleTextChanged = (event) => {
+        const text = event.target.value
+        onTextFilter(text)
+    }
 
     return (
         
@@ -18,7 +34,7 @@ function SearchFormSection(){
             <form onSubmit={handleSubmit} role="search" id="empleos-search-form">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                        <input name={searchId} id="empleos-search-input" type="text" placeholder="Buscar empleos por título, habilidad o empresa" />
+                        <input onChange = {handleTextChanged} name={searchId} id="empleos-search-input" type="text" placeholder="Buscar empleos por título, habilidad o empresa" />
                     </div>
                     <div className="filtros">
                         <select name={technologyId} id="filter-technology">
