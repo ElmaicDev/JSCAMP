@@ -5,7 +5,7 @@ function Job_Listing({jobs}){
     return(
         //ESTA ETIQUETA VACÍA ES UN FRAGMENTO Y SE USA CUANDO SE DEBEN DEVOLVER DOS ELEMENTOS EN EL RETURN, EN ESTE CASO EL DIV Y EL H2
         <>
-            <h2>Resultados de Búsqueda</h2>
+            <h2 style={{textAlign:'center'}}>Resultados de Búsqueda</h2>
             {/*<!-- Aquí irían los resultados de búsqueda -->*/}
         
             <div className="job-listings">

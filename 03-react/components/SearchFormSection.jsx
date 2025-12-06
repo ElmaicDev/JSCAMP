@@ -4,11 +4,13 @@ function SearchFormSection({onSearch, onTextFilter}){
     const technologyId = useId()
     const locationId = useId()
     const experienceId = useId()
-    const handleSubmit = (event) => {
+    // const handleSubmit = (event) => { antes era handle submit pero ahora tiene que ser handleChanged
+    const handleSearchChanged = (event) => {
+        
 
         event.preventDefault()
-
-        const formData = new FormData(event.target)
+        // const formData = new FormData(event.target) este event.target envía el botón o formulario que disparó el evento, mientras que event.currentTarget envía el formulario 
+        const formData = new FormData(event.currentTarget)
 
         //De esta forma filters va a estar guardando la información de cada filtro aplicado
         const filters = {
@@ -31,7 +33,8 @@ function SearchFormSection({onSearch, onTextFilter}){
       <section>
             <h1>Encuentra tu próximo Tabajo</h1>
             <p>Explora las últimas ofertas de empleo en el sector tecnológico y encuentra la oportunidad perfecta para ti.</p>
-            <form onSubmit={handleSubmit} role="search" id="empleos-search-form">
+            {/* <form onSubmit={handleSubmit} role="search" id="empleos-search-form"> así estaba para controla el submit*/}
+            <form onChange={handleSearchChanged} role="search" id="empleos-search-form">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                         <input onChange = {handleTextChanged} name={searchId} id="empleos-search-input" type="text" placeholder="Buscar empleos por título, habilidad o empresa" />

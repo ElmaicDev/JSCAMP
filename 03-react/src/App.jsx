@@ -19,7 +19,9 @@ function App() {
     const RESULT_PER_PAGE = 3
 
     const jobFilterByFilters = jobsData.filter(job => {
-        return filters.technology === '' || job.data.technology === filters.technology
+        return (filters.technology === '' || job.data.technology === filters.technology) &&
+               (filters.location === '' || job.data.modalidad === filters.location) &&
+               (filters.experience === '' || job.data.nivel === filters.experience ) // 
     })
 
     const jobsFilter = textToFilter === '' ? jobFilterByFilters : jobFilterByFilters.filter((job)=>{
@@ -41,7 +43,8 @@ function App() {
     }
 
     const handleTextFilter = (newTextToFilter) =>{
-        setTextToFilter(newTextToFilter)
+        //Esta función no se usa acá, sino que se pasa de parámetro del SearchFormSection y es usada, cuando es llamada en la otra función.
+        setTextToFilter(newTextToFilter.toLowerCase()) 
         setCurrentPage(1)
     }
 
