@@ -1,3 +1,5 @@
+import { Link } from "./Link"
+
 function Header(){
     return(
         <header>
@@ -6,9 +8,9 @@ function Header(){
                 DevJobs
             </h1>
             <nav>
-                <a href="./index.html">Inicio</a>
-                <a href="./empleos.html">Empleos</a>
-                <a href="">Contacto</a>
+                <Link href="/">Inicio</Link>
+                <Link href="/search">Empleos</Link>
+                <Link href="">Contacto</Link>
             </nav>
     </header>
     )
