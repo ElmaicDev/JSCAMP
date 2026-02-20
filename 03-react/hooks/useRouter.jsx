@@ -7,13 +7,14 @@ export function useRouter(){
     useEffect(()=>{
     const handleLocationChanged = () => {
         setCurrentPath(window.location.pathname)
-        }
-        window.addEventListener('popstate', handleLocationChanged)
+      }
 
-        return () => 
-        {
-            window.removeEventListener('popstate',handleLocationChanged)
-        }
+      window.addEventListener('popstate', handleLocationChanged)
+
+      return () => 
+      {
+        window.removeEventListener('popstate',handleLocationChanged)
+      }
   },[])
 
   function navigateTo(path){
@@ -27,3 +28,8 @@ export function useRouter(){
     navigateTo
   }
 }
+
+
+
+// REGLA IMPORTANTE PARA LOS HOOKS: Solo se pueden llamar en el nivel más alto de un componente o de otro hook. No se pueden llamar dentro de condicionales, bucles o funciones anidadas.
+// Y mucho menos en eventos como onClick, onChange, etc. Tampoco dentro de un efecto, como useEffect.

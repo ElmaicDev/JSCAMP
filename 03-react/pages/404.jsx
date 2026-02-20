@@ -1,8 +1,8 @@
 export function NotFoundPage(){
     return(
-        <main>
+        <div>
             <h1>Página No Encontrada</h1>
             <p> Lo sentimos, la página que buscas no existe</p>
-        </main>
+        </div>
     )
 }

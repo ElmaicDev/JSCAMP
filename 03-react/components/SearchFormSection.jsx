@@ -1,32 +1,47 @@
-import { useId } from "react" //Es usado para crear identificadores únicos, útil sobre todo en formularios para cuando la app sea muy grande no correr el riesgo de reutilizar nombres
+import { useState, useId } from "react" //Es usado para crear identificadores únicos, útil sobre todo en formularios para cuando la app sea muy grande no correr el riesgo de reutilizar nombres
+
+const useSearchForm = ({technologyId, locationId, experienceId, onSearch, onTextFilter}) => {
+  
+    const [searchText, setSearchText] = useState('')
+  
+    const handleSearchChanged = (event) => {
+            
+
+            event.preventDefault()
+            // const formData = new FormData(event.target) este event.target envía el botón o formulario que disparó el evento, mientras que event.currentTarget envía el formulario 
+            const formData = new FormData(event.currentTarget)
+
+            //De esta forma filters va a estar guardando la información de cada filtro aplicado
+            const filters = {
+                search: formData.get(searchText),
+                technology: formData.get(technologyId),
+                location: formData.get(locationId),
+                experience: formData.get(experienceId)
+            }
+
+            onSearch(filters)
+        }
+        
+        const handleTextChanged = (event) => {
+            const text = event.target.value
+            setSearchText(text)
+            onTextFilter(text)
+        }
+        return {searchText,
+            handleSearchChanged,
+            handleTextChanged
+        }
+}
+
 function SearchFormSection({onSearch, onTextFilter}){
     const searchId = useId()
     const technologyId = useId()
     const locationId = useId()
     const experienceId = useId()
     // const handleSubmit = (event) => { antes era handle submit pero ahora tiene que ser handleChanged
-    const handleSearchChanged = (event) => {
-        
-
-        event.preventDefault()
-        // const formData = new FormData(event.target) este event.target envía el botón o formulario que disparó el evento, mientras que event.currentTarget envía el formulario 
-        const formData = new FormData(event.currentTarget)
-
-        //De esta forma filters va a estar guardando la información de cada filtro aplicado
-        const filters = {
-            search: formData.get(searchId),
-            technology: formData.get(technologyId),
-            location: formData.get(locationId),
-            experience: formData.get(experienceId)
-        }
-
-        onSearch(filters)
-    }
-    
-    const handleTextChanged = (event) => {
-        const text = event.target.value
-        onTextFilter(text)
-    }
+    const {
+        handleSearchChanged, 
+        handleTextChanged} = useSearchForm({technologyId, locationId, experienceId, onSearch, onTextFilter})
 
     return (
         

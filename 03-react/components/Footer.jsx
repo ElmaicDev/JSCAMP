@@ -1,4 +1,4 @@
-function Footer(){
+export function Footer(){
     return(
         <footer>
             <small>Todos los derechos reservados DevJobs JSCAMP &copy; 2025</small>
@@ -6,4 +6,4 @@ function Footer(){
     )
 }
 
-export default Footer
+// export default Footer

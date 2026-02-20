@@ -1,6 +1,6 @@
 import { Link } from "./Link"
 
-function Header(){
+export function Header(){
     return(
         <header>
             <h1>
@@ -10,10 +10,10 @@ function Header(){
             <nav>
                 <Link href="/">Inicio</Link>
                 <Link href="/search">Empleos</Link>
-                <Link href="">Contacto</Link>
+                <Link href="/contact">Contacto</Link>
             </nav>
     </header>
     )
 }
 
-export default Header
+// export default Header
