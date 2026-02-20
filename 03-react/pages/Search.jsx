@@ -1,12 +1,12 @@
-import { useEffect,useState } from "react"
+import { use, useEffect,useState } from "react"
 import SearchFormSection from "../components/SearchFormSection.jsx"
 import Job_Listing from "../components/Job_Listings.jsx" //se puede cambiar el nombre como {Job_Listing as Job}
 import Pagination from "../components/Pagination.jsx"
 import jobsData from "../src/data.json"
 
-
-export function SearchPage() {
-
+const RESULT_PER_PAGE = 4;
+const useFilter = () =>
+    {
     const [filters,setFilters] = useState({
         technology: '',
             location: '',
@@ -14,23 +14,38 @@ export function SearchPage() {
     })
     const [textToFilter, setTextToFilter] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
-    const RESULT_PER_PAGE = 3
+   
+    const [total,setTotal] = useState(0)
+    const [jobs, setJobs] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    const jobFilterByFilters = jobsData.filter(job => {
-        return (filters.technology === '' || job.data.technology === filters.technology) &&
-               (filters.location === '' || job.data.modalidad === filters.location) &&
-               (filters.experience === '' || job.data.nivel === filters.experience ) // 
-    })
+    const totalPages = Math.ceil(jobs?.length / RESULT_PER_PAGE)
 
-    const jobsFilter = textToFilter === '' ? jobFilterByFilters : jobFilterByFilters.filter((job)=>{
-       return job.titulo.toLowerCase().includes(textToFilter)
-    })
+    //En react no se puede hacer una llamada asíncrona dentro de un componente o un custom hook, por eso, así toca hacer el fetch dentro del useEffect
+    useEffect(() => {
 
-    const totalPages = Math.ceil(jobsFilter.length/RESULT_PER_PAGE)
+        async function fecthJobs(){
 
-    // el slice no incluye el objeto que hay en el índice final
-    const pagedResults = jobsFilter.slice((currentPage -1) * RESULT_PER_PAGE, currentPage * RESULT_PER_PAGE) // Acá indico un slice de la data según los resultados que quiero mostrar 
-    // GENERALMENTE LA PAGINACIÓN SE HACE EN EL BACKEND, SOLO EN CASOS CONCRETOS SE HACE A NIVEL DE API -> LUEGO SE QUITA Y SE HACE EN EL BACK
+            try{
+                setLoading(true)
+
+                const response = await fetch('https://jscamp-api.vercel.app/api/jobs')
+                const json = await response.json()
+                setJobs(json.data)
+                setTotal(json.total)
+            }
+            catch(error){
+                console.error('Error fetching jobs:', error);
+            }
+            finally{
+                setLoading(false)
+            }
+        }
+
+        fecthJobs();
+    }
+    ,[]) //con el arreglo vacío solo se renderiza el effect la primer vez
+
     const handlePageChange = (page) => { 
         setCurrentPage(page)
     }
@@ -46,20 +61,35 @@ export function SearchPage() {
         setTextToFilter(newTextToFilter.toLowerCase()) 
         setCurrentPage(1)
     }
+    return {
+        loading,
+        jobs,
+        total,
+        currentPage,
+        totalPages,
+        handlePageChange,
+        handleSearch,
+        handleTextFilter
+    }
+}
+
+export function SearchPage() {
+
+    const{
+        jobs,
+        total,
+        loading,
+        currentPage,
+        totalPages,
+        handlePageChange,
+        handleSearch,
+        handleTextFilter
+    } = useFilter();
 
     useEffect(()=> {
-            const handleResize =  () => {
-            console.log('cambiando tamaño')
-            console.log(window.innerHeight,window.innerWidth)
-        }
+           document.title = 'Resultados ${total}, Página ${currentPage} - DevJobs';
 
-        window.addEventListener('resize',handleResize)
-
-        return () => {
-            window.removeEventListener('resize',handleResize) // Esto lo que hace directamente es eliminar los eventos que se alamacenaron para no ocupar innecesariamente memoria
-        }
-
-    }, [])
+    }, [jobs, currentPage])
 
 
 
@@ -67,7 +97,7 @@ export function SearchPage() {
     <>
     <main>
         <SearchFormSection onSearch={handleSearch} onTextFilter = {handleTextFilter}/>
-        <Job_Listing jobs={pagedResults}/>
+        {loading ? <p>Cargando...</p> : <Job_Listing jobs={jobs}/>}
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange = {handlePageChange}/>
     </main>
     </>
