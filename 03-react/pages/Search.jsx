@@ -2,7 +2,6 @@ import { use, useEffect,useState } from "react"
 import SearchFormSection from "../components/SearchFormSection.jsx"
 import Job_Listing from "../components/Job_Listings.jsx" //se puede cambiar el nombre como {Job_Listing as Job}
 import Pagination from "../components/Pagination.jsx"
-import jobsData from "../src/data.json"
 
 const RESULT_PER_PAGE = 4;
 const useFilter = () =>
@@ -29,7 +28,17 @@ const useFilter = () =>
             try{
                 setLoading(true)
 
-                const response = await fetch('https://jscamp-api.vercel.app/api/jobs')
+                //URLSearchParams es una interfaz que proporciona métodos para trabajar con los parámetros de consulta de una URL. Permite crear, manipular y acceder a los parámetros de consulta de manera sencilla.
+                const params = new URLSearchParams()
+                //Esto se está haciendo porque desde la api del midu se hacen los filtros por medio de la url, por medio de los filter params, por ejemplo los parámetros que van después de "?"
+                if(textToFilter) params.append('text', textToFilter)
+                if(filters.technology) params.append('technology', filters.technology)
+                if(filters.location) params.append('type', filters.location)
+                if(filters.experience) params.append('level', filters.experience)
+                
+                const queryParams = params.toString() //toString convierte los parámetros a una cadena de texto, por ejemplo "text=react&technology=frontend"
+
+                const response = await fetch(`https://jscamp-api.vercel.app/api/jobs?${queryParams}`) //se le pasan los parámetros a la url, por ejemplo "https://jscamp-api.vercel.app/api/jobs?text=react&technology=frontend"
                 const json = await response.json()
                 setJobs(json.data)
                 setTotal(json.total)
@@ -44,7 +53,7 @@ const useFilter = () =>
 
         fecthJobs();
     }
-    ,[]) //con el arreglo vacío solo se renderiza el effect la primer vez
+    ,[filters,textToFilter,currentPage]) //con el arreglo vacío solo se renderiza el effect la primer vez
 
     const handlePageChange = (page) => { 
         setCurrentPage(page)
@@ -87,9 +96,9 @@ export function SearchPage() {
     } = useFilter();
 
     useEffect(()=> {
-           document.title = 'Resultados ${total}, Página ${currentPage} - DevJobs';
+           document.title = `Resultados ${total}, Página ${currentPage} - DevJobs`;
 
-    }, [jobs, currentPage])
+    }, [jobs, currentPage, total]) //además, este array son dependencias de useEffect, es decir, cada vez que cambie alguna de estas variables, se va a ejecutar el useEffect, por ejemplo, cada vez que cambie el total de resultados o la página actual, se va a actualizar el título de la página con el número de resultados y la página actual.
 
 
 
