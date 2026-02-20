@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>DevJobs - Empleos</title>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="Resultados de búsqueda de empleos en DevJobs"
+    />
+    <link rel="stylesheet" href="/01-HTML-CSS/styles.css" />
+
+    <script type="module">
+        import React from "https://esm.sh/react?dev" // núcleo de react
+        import ReactDOM from "https://esm.sh/react-dom/client?dev" //Permite renderizar la app en una página web
+        
+        window.React = React
+        window.ReactDOM = ReactDOM
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js">
+        // Esta biblioteca lo que hace es convertir el texto a jsx 
+    </script> 
+    <script type="text/babel">
+        
+
+        function JobCard({data,titulo, empresa, ubicacion,descripcion}){
+            //se llama desestructuración y el método useState es un hook
+            const [
+                isApplied,
+                setIsApplied
+            ] = React.useState(false) // Esto devuelve un array con dos posiciones
+
+            const text = isApplied ? 'Aplicado!' : "Aplicar"
+            const buttonClass = isApplied ? 'is-applied' : ''
+
+            function handleClick(){
+                setIsApplied(!isApplied)
+            }
+            return(
+                <article 
+                    className="job-listing-cards"
+                    data-modalidad = {data.modalidad}
+                    data-experiencia = {data.nivel}
+                    data-technology = {data.technology}
+                >
+                    <div>
+                        <h3>{titulo}</h3>
+                        <small>{empresa} | {ubicacion}</small>
+                        <p>{descripcion}</p>
+                    </div>
+                    <button 
+                    className={`button-apply-job ${buttonClass}`}
+                    onClick = {handleClick}>{text}</button>
+                </article>
+            )
+
+        }
+        //REACT USA EL VIRTUAL DOM Y RENDERIZA LOS COMPONENTES SIEMPRE QUE SE USA O SE INICIA LA PÁGINA, Y DETECTA CUÁL ES EL CAMBIO ESPECÍFICO QUE NECESITA HACER Y CAMBIA ESE ÚNICO ELEMENTO
+        function App(){
+            return (
+                <div className="job-listings">
+                    <JobCard 
+                        titulo = "Desarrollador/a frontend react.js"
+                        empresa = "Tech Solutions"
+                        ubicacion = "Remoto"
+                        descripcion = "blablablablablabalbalabalbalabalabalablabla"
+                        data = {{modalidad:"remoto", nivel:"junior", technology:"react"}}
+                    />
+                </div>
+            )
+        }
+
+        const rootElem = document.querySelector('#react-root')
+        const root = ReactDOM.createRoot(rootElem)
+        root.render(<App/>)
+
+    </script>
+  </head>
+  <body>
+    <header>
+            <h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-affiliate"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275" /><path d="M11.683 12.317l5.759 -5.759" /><path d="M5.5 5.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M18.5 5.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M18.5 18.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M8.5 15.5m-4.5 0a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0" /></svg>
+                DevJobs
+            </h1>
+            <nav>
+                <a href="./index.html">Inicio</a>
+                <a href="./empleos.html">Empleos</a>
+                <a href="">Contacto</a>
+            </nav>
+            <div>
+                <devJobs-avatar 
+                    service  = "x"
+                    username="midudev"
+                    size="32">
+                </devJobs-avatar>
+            </div>
+        </header>
+    <main >
+        <section class="job-search">
+            <h1>React.js, primeros pasos.</h1>    
+        </section> 
+      
+        <section>
+            <h2>Empleos Disponibles</h2>
+            <div id="react-root"></div>
+        </section>
+
+      
+      <footer>
+            <small>Todos los derechos reservados DevJobs JSCAMP &copy; 2025</small>
+        </footer>
+    </main>
+  </body>

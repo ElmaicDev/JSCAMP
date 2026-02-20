@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Mi Protfolio</title>
+        <meta name="Description" content="Protfolio de Maicol Ramirez, desarrollador de software">
+        <meta name="Robots" content="index, follow">
+        <meta name="Theme-Color" content="#09f"> 
+        <!-- La siguiente línea pone el ícono de la página web en la barra de ventanas -->
+        <link rel="icon" type="image/jpg"  href="./images/Yo.jpg">
+
+        <!-- OPEN GRAPH  -->
+        <!-- Es cómo se vería en otras páginas, puede ser útil  -->
+        <meta property="og:title" content="Protfolio de Maicol Ramirez">
+        <meta property="og:description" content="Protfolio de Maicol Ramirez, desarrollador de software">
+        <meta property="og:image" content="./images/Yo.jpg">
+        <meta property="og:image:alt" content="Foto de Maicol Ramirez">
+
+        <meta rel="alternate" href="Acá se puede poner el link de la pag en inglés" hreflang="en-us">
+        <!-- el canonical convierte el www.maicol.com a https://maicol -->
+        <meta rel="canonical" href="Acá se puede poner el link de la pag principal">
+
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background-color: #b8b8b7;
+            }
+            #fotoPerfil {
+                border-radius: 50%;
+                border: 3px solid #000;
+                margin-top: 10px;
+            }
+        </style>    
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const btnModal = document.getElementById("b_Modal");
+                const modal = document.getElementById("Modal");
+                const closemodal = document.getElementById("close_modal");
+
+                btnModal.addEventListener("click", () => 
+                {
+                    modal.showModal();
+                });
+                closemodal.addEventListener("click", () => 
+                {
+                    modal.close();
+                });
+            });
+
+        </script>
+
+
+    </head>
+
+    <body>
+        <header>
+            <h1> Protfolio Maicol Ramirez</h1>
+            <nav>
+                <!-- enlaces internos de la página -->
+                <a href="#experiencia">Experiencia</a>
+                <a href="#proyectos">Proyectos</a>
+                <!-- enlaces externos -->
+                <a href="https://www.twitch.tv/" target="_blank" rel="noreferrer" >Twitch</a>
+            </nav>
+        </header>
+        <main>
+            <p>+1Año de experiencia como <strong>Desarrollador de software</strong>. Ingeniero civil</p>
+            <h2 id="experiencia">Experiencia</h2>
+            <ul>
+                <li class="list-item"> EIA - 2023</li>
+                <li class="list-item"> Conuribe - 2024</li>
+                <li class="list-item"> EfeprimaCe - 2024/2025</li>
+            </ul>
+            <a download href="./images/Yo.jpg">
+                <img id="fotoPerfil" src="./images/Yo.jpg" width="250">
+              
+            </a>
+            <video autoplay muted loop src="./videos/CieloEstrellado.mp4" width="500"></video>
+            <dialog id = "Modal">sabías que puedes abrir un modal así?
+                <p>Es usando la etiqueta dialog y si la quieres ver pon el atributo open</p>
+                <button id="close_modal">cerrar Modal</button>
+            </dialog>
+            <div>
+                 <button id="b_Modal">VER MODAL</button>
+            </div>
+
+            <h2 id="proyectos">Proyectos Realizados</h2>
+            <aside>
+                <header>
+                    <h3>Mis tecnologías favoritas:</h3>
+                </header>
+                <ol>
+                    <li>HTML</li>
+                    <li>JAVASRCRIPT</li>
+                    <li>C#</li>
+                    <li>PYTHON</li>
+                </ol>
+            </aside>
+            <section>
+                <article>
+                    <header>
+                        <h4>Sitio Web Corporativo</h4>
+                    </header>
+                    <p>Desarrollé un sitio web corporativo para una empresa local utilizando HTML, CSS y JavaScript. El sitio incluye información sobre la empresa, servicios ofrecidos y un formulario de contacto.</p>
+                    <footer>
+                        <small>Tecnolías usadas: css, html y JavaScript</small>
+                    </footer>
+                </article>
+                <article>
+                    <header>
+                        <h4>Sitio Web Corporativo</h4>
+                    </header>
+                    <p>Desarrollé un sitio web corporativo para una empresa local utilizando HTML, CSS y JavaScript. El sitio incluye información sobre la empresa, servicios ofrecidos y un formulario de contacto.</p>
+                    <footer>
+                        <small>Tecnolías usadas: css, html y JavaScript</small>
+                    </footer>
+                </article>
+                <article>
+                    <header>
+                        <h4>Sitio Web Corporativo</h4>
+                    </header>
+                    <p>Desarrollé un sitio web corporativo para una empresa local utilizando HTML, CSS y JavaScript. El sitio incluye información sobre la empresa, servicios ofrecidos y un formulario de contacto.</p>
+                    <footer>
+                        <small>Tecnolías usadas: css, html y JavaScript</small>
+                    </footer>
+                </article>
+            </section>
+            <section>
+                <h2>Preguntas frecuentes</h2>
+                <details>
+                    <summary>¿Cuál es tu experiencia en desarrollo web?</summary>
+                    <p>Tengo más de un año de experiencia trabajando en proyectos de desarrollo web, tanto frontend como backend.</p>
+                </details>
+                <details>
+                    <summary>¿Qué tecnologías dominas?</summary>
+                    <p>Estoy familiarizado con HTML, CSS, JavaScript, Python y C#.</p>
+                </details>
+                <details>
+                    <summary>¿Qué estudios Tienes?</summary>
+                    <p>Estudié ingeniería civil en la universidad de medellín durante 5 años.</p>
+                </details>
+            </section>
+            <section>
+                <h2>Formulario de contacto</h2>
+                <form type="post" action="/">
+                    <fieldset>
+                        <legend>Información Personal</legend>
+                        <div>
+                            <label>Nombre:
+                            <input type="text" id="nombre" name="name" required placeholder="Maicol Ramirez"/>
+                        </label>
+                        </div>
+                        <label>Email:
+                            <input type="email" id="email" name="Email" required placeholder="MaicolRamirez@gmail.com"/>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Información Adicional</legend>
+                        <label>Teléfono
+                            <input type="tel" id="telefono" name="telefono" placeholder="+57 "/>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Otros</legend>
+                        <div>
+                            <label>Por qué quieres contactarme?:
+                                <select type="select" id="motivo" name="motivo">
+                                    <option value="1">Trabajo</option>
+                                    <option value="2">Proyecto</option>
+                                    <option value="3">Otro</option>
+                                </select>
+                                
+                            </label>
+                        </div>
+                       
+                        <div>
+                            <datalist id="lenguajes">
+                                <option value="python"></option>
+                                <option value="c#"></option>
+                                <option value="Javascript"></option>
+                                <option value="css"></option>
+                            </datalist>
+                            <label for="lenguajes">Con qué Lenguaje quieres que te ayude?</label>
+                            <input list="lenguajes" name="lenguajes">
+                        </div>
+                         <label>¿Aceptas Términos y condiciones?
+                            <input type="checkbox" required id="terminos" name="terminos"/>
+                        </label>
+
+                    </fieldset>
+                    <input type="submit" value="Enviar">
+                </form>
+            </section>
+        </main>
+        <footer>
+            <a href="mailTo:ramirez@gmail.com">Envíame un email</a>
+            <a href="tel:+573007696225">Comunícate conmigo</a>
+            <a href="whatsapp://send?text=hola Maicol">Comunícate a wpp</a>
+            <small>Todos los derechos reservados Maicol Ramirez &copy; 2025</small>
+        </footer>
+    </body>
+    
+</html>
