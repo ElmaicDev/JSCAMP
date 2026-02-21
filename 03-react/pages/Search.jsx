@@ -18,7 +18,7 @@ const useFilter = () =>
     const [jobs, setJobs] = useState([])
     const [loading, setLoading] = useState(true)
 
-    const totalPages = Math.ceil(jobs?.length / RESULT_PER_PAGE)
+    const totalPages = Math.ceil(total / RESULT_PER_PAGE)
 
     //En react no se puede hacer una llamada asíncrona dentro de un componente o un custom hook, por eso, así toca hacer el fetch dentro del useEffect
     useEffect(() => {
@@ -36,6 +36,11 @@ const useFilter = () =>
                 if(filters.location) params.append('type', filters.location)
                 if(filters.experience) params.append('level', filters.experience)
                 
+                const offset = (currentPage - 1) * RESULT_PER_PAGE
+                params.append('limit', RESULT_PER_PAGE) // la cantidad de resultados por página
+                params.append('offset', offset) // que se salte cierta cantidad de resultados de la api para que muestre los resultados de la página actual, por ejemplo, si estamos en la página 2, se va a saltar los primeros 4 resultados y va a mostrar los siguientes 4 resultados, es decir, del 5 al 8.
+
+
                 const queryParams = params.toString() //toString convierte los parámetros a una cadena de texto, por ejemplo "text=react&technology=frontend"
 
                 const response = await fetch(`https://jscamp-api.vercel.app/api/jobs?${queryParams}`) //se le pasan los parámetros a la url, por ejemplo "https://jscamp-api.vercel.app/api/jobs?text=react&technology=frontend"
