@@ -1,24 +1,33 @@
-import { use, useEffect,useState } from "react"
+import { useEffect,useState } from "react"
 import SearchFormSection from "../components/SearchFormSection.jsx"
 import Job_Listing from "../components/Job_Listings.jsx" //se puede cambiar el nombre como {Job_Listing as Job}
 import Pagination from "../components/Pagination.jsx"
+import { Modal } from "../components/Modal.jsx";
 
 const RESULT_PER_PAGE = 4;
 const useFilter = () =>
     {
-    const [filters,setFilters] = useState({
+    const initialFilterData = {
         technology: '',
             location: '',
             experience: ''
-    })
+    }
+    const [filters,setFilters] = useState(initialFilterData)
     const [textToFilter, setTextToFilter] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
    
     const [total,setTotal] = useState(0)
     const [jobs, setJobs] = useState([])
     const [loading, setLoading] = useState(true)
+    const [hasActiveFilters, setHasActiveFilters] = useState(false)
 
     const totalPages = Math.ceil(total / RESULT_PER_PAGE)
+
+    const handleClearFilters = () =>{
+
+        setFilters(initialFilterData)
+        return setHasActiveFilters(false);
+    }
 
     //En react no se puede hacer una llamada asíncrona dentro de un componente o un custom hook, por eso, así toca hacer el fetch dentro del useEffect
     useEffect(() => {
@@ -27,7 +36,6 @@ const useFilter = () =>
 
             try{
                 setLoading(true)
-
                 //URLSearchParams es una interfaz que proporciona métodos para trabajar con los parámetros de consulta de una URL. Permite crear, manipular y acceder a los parámetros de consulta de manera sencilla.
                 const params = new URLSearchParams()
                 //Esto se está haciendo porque desde la api del midu se hacen los filtros por medio de la url, por medio de los filter params, por ejemplo los parámetros que van después de "?"
@@ -55,7 +63,6 @@ const useFilter = () =>
                 setLoading(false)
             }
         }
-
         fecthJobs();
     }
     ,[filters,textToFilter,currentPage]) //con el arreglo vacío solo se renderiza el effect la primer vez
@@ -68,6 +75,7 @@ const useFilter = () =>
     const handleSearch = (filters) => {
         setCurrentPage(1)
         setFilters(filters)
+        setHasActiveFilters(true)
     }
 
     const handleTextFilter = (newTextToFilter) =>{
@@ -81,9 +89,11 @@ const useFilter = () =>
         total,
         currentPage,
         totalPages,
+        hasActiveFilters,
         handlePageChange,
         handleSearch,
-        handleTextFilter
+        handleTextFilter,
+        handleClearFilters
     }
 }
 
@@ -95,9 +105,11 @@ export function SearchPage() {
         loading,
         currentPage,
         totalPages,
+        hasActiveFilters,
         handlePageChange,
         handleSearch,
-        handleTextFilter
+        handleTextFilter,
+        handleClearFilters
     } = useFilter();
 
     useEffect(()=> {
@@ -110,8 +122,17 @@ export function SearchPage() {
   return (
     <>
     <main>
-        <SearchFormSection onSearch={handleSearch} onTextFilter = {handleTextFilter}/>
-        {loading ? <p>Cargando...</p> : <Job_Listing jobs={jobs}/>}
+        <SearchFormSection onSearch={handleSearch} onTextFilter = {handleTextFilter} onClearFilters={handleClearFilters} hasAtiveFilters={hasActiveFilters}/>
+        {
+            loading ? 
+            <Modal>
+                Cargando... 
+                <div className="loader">
+                </div>
+            </Modal> 
+            : <Job_Listing jobs={jobs}/>
+        
+        }
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange = {handlePageChange}/>
     </main>
     </>

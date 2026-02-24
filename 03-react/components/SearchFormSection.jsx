@@ -33,7 +33,7 @@ const useSearchForm = ({technologyId, locationId, experienceId, onSearch, onText
         }
 }
 
-function SearchFormSection({onSearch, onTextFilter}){
+function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilters}) {
     const searchId = useId()
     const technologyId = useId()
     const locationId = useId()
@@ -89,6 +89,7 @@ function SearchFormSection({onSearch, onTextFilter}){
                         <option value="senior">Senior</option>
                         <option value="lead">Lead</option>
                     </select>
+                    {hasAtiveFilters && <button onClick={onClearFilters} type="button">Limpiar filtros</button>}
                 </div>
                 </form>
         </section> 
