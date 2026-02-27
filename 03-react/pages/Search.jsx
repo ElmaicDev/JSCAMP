@@ -3,7 +3,7 @@ import SearchFormSection from "../components/SearchFormSection.jsx"
 import Job_Listing from "../components/Job_Listings.jsx" //se puede cambiar el nombre como {Job_Listing as Job}
 import Pagination from "../components/Pagination.jsx"
 import { Modal } from "../components/Modal.jsx";
-
+import errorIcon from "../src/assets/icons/errorIcon.svg"
 const RESULT_PER_PAGE = 4;
 const useFilter = () =>
     {
@@ -12,7 +12,10 @@ const useFilter = () =>
             location: '',
             experience: ''
     }
-    const [filters,setFilters] = useState(initialFilterData)
+    const [filters,setFilters] = useState(() => {
+        const saved = window.localStorage.getItem('jobsFilters')
+        return saved ? JSON.parse(saved) : initialFilterData
+    })
     const [textToFilter, setTextToFilter] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
    
@@ -21,14 +24,17 @@ const useFilter = () =>
     const [loading, setLoading] = useState(true)
     const [hasActiveFilters, setHasActiveFilters] = useState(false)
 
+    const [fetchErrors, setFecthErrors] = useState(null)
     const totalPages = Math.ceil(total / RESULT_PER_PAGE)
 
     const handleClearFilters = () =>{
 
         setFilters(initialFilterData)
+        window.localStorage.removeItem('jobsFilters')
         return setHasActiveFilters(false);
     }
 
+    
     //En react no se puede hacer una llamada asíncrona dentro de un componente o un custom hook, por eso, así toca hacer el fetch dentro del useEffect
     useEffect(() => {
 
@@ -52,12 +58,18 @@ const useFilter = () =>
                 const queryParams = params.toString() //toString convierte los parámetros a una cadena de texto, por ejemplo "text=react&technology=frontend"
 
                 const response = await fetch(`https://jscamp-api.vercel.app/api/jobs?${queryParams}`) //se le pasan los parámetros a la url, por ejemplo "https://jscamp-api.vercel.app/api/jobs?text=react&technology=frontend"
-                const json = await response.json()
-                setJobs(json.data)
-                setTotal(json.total)
+                if(response.ok){
+                    // throw new Error(response.status)
+                    const json = await response.json()
+                    setJobs(json.data)
+                    setTotal(json.total)
+                }
+                else{
+                    throw new Error(response.status)
+                }
             }
             catch(error){
-                console.error('Error fetching jobs:', error);
+                setFecthErrors(error)
             }
             finally{
                 setLoading(false)
@@ -66,6 +78,11 @@ const useFilter = () =>
         fecthJobs();
     }
     ,[filters,textToFilter,currentPage]) //con el arreglo vacío solo se renderiza el effect la primer vez
+
+    useEffect(() => {
+        window.localStorage.setItem('jobsFilters', JSON.stringify(filters))
+
+    },[filters])
 
     const handlePageChange = (page) => { 
         setCurrentPage(page)
@@ -90,6 +107,8 @@ const useFilter = () =>
         currentPage,
         totalPages,
         hasActiveFilters,
+        fetchErrors,
+        canShowModal : !!fetchErrors,
         handlePageChange,
         handleSearch,
         handleTextFilter,
@@ -106,6 +125,7 @@ export function SearchPage() {
         currentPage,
         totalPages,
         hasActiveFilters,
+        fetchErrors,
         handlePageChange,
         handleSearch,
         handleTextFilter,
@@ -123,16 +143,26 @@ export function SearchPage() {
     <>
     <main>
         <SearchFormSection onSearch={handleSearch} onTextFilter = {handleTextFilter} onClearFilters={handleClearFilters} hasAtiveFilters={hasActiveFilters}/>
-        {
-            loading ? 
+        
+        { loading &&(
             <Modal>
                 Cargando... 
                 <div className="loader">
                 </div>
             </Modal> 
-            : <Job_Listing jobs={jobs}/>
         
-        }
+        )}
+        {
+            fetchErrors &&
+            (<Modal>
+
+                <img src={errorIcon} alt="" />
+                <p> {fetchErrors.message} </p>
+                <button onClick={() => window.location.reload()}>Reintentar</button>
+            </Modal>
+        )}
+
+        {!loading && !fetchErrors && (<Job_Listing jobs={jobs}/>)}
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange = {handlePageChange}/>
     </main>
     </>
