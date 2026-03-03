@@ -138,16 +138,13 @@ export function SearchPage() {
         handleClearFilters
     } = useFilter();
 
-    useEffect(()=> {
-           document.title = `Resultados ${total}, Página ${currentPage} - DevJobs`;
 
-    }, [jobs, currentPage, total]) //además, este array son dependencias de useEffect, es decir, cada vez que cambie alguna de estas variables, se va a ejecutar el useEffect, por ejemplo, cada vez que cambie el total de resultados o la página actual, se va a actualizar el título de la página con el número de resultados y la página actual.
-
-
+    const title = loading ? "Cargando... DevJobs" : `Resultados ${total}, Página ${currentPage} - DevJobs`;
     
   return (
     <>
     <main>
+        <title>{title}</title>
         <SearchFormSection onSearch={handleSearch} onTextFilter = {handleTextFilter} onClearFilters={handleClearFilters} hasAtiveFilters={hasActiveFilters}/>
         
         { loading &&(
