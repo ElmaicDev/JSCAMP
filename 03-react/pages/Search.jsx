@@ -4,6 +4,8 @@ import Job_Listing from "../components/Job_Listings.jsx" //se puede cambiar el n
 import Pagination from "../components/Pagination.jsx"
 import { Modal } from "../components/Modal.jsx";
 import errorIcon from "../src/assets/icons/errorIcon.svg"
+import { getErrorMessage } from "../helpers/Errors.jsx";
+
 const RESULT_PER_PAGE = 4;
 const useFilter = () =>
     {
@@ -24,7 +26,7 @@ const useFilter = () =>
     const [loading, setLoading] = useState(true)
     const [hasActiveFilters, setHasActiveFilters] = useState(false)
 
-    const [fetchErrors, setFecthErrors] = useState(null)
+    const [fetchErrors, setFetchErrors] = useState(null)
     const totalPages = Math.ceil(total / RESULT_PER_PAGE)
 
     const handleClearFilters = () =>{
@@ -44,6 +46,8 @@ const useFilter = () =>
                 setLoading(true)
                 //URLSearchParams es una interfaz que proporciona métodos para trabajar con los parámetros de consulta de una URL. Permite crear, manipular y acceder a los parámetros de consulta de manera sencilla.
                 const params = new URLSearchParams()
+                if(!window.navigator.onLine)
+
                 //Esto se está haciendo porque desde la api del midu se hacen los filtros por medio de la url, por medio de los filter params, por ejemplo los parámetros que van después de "?"
                 if(textToFilter) params.append('text', textToFilter)
                 if(filters.technology) params.append('technology', filters.technology)
@@ -59,7 +63,6 @@ const useFilter = () =>
 
                 const response = await fetch(`https://jscamp-api.vercel.app/api/jobs?${queryParams}`) //se le pasan los parámetros a la url, por ejemplo "https://jscamp-api.vercel.app/api/jobs?text=react&technology=frontend"
                 if(response.ok){
-                    // throw new Error(response.status)
                     const json = await response.json()
                     setJobs(json.data)
                     setTotal(json.total)
@@ -69,7 +72,10 @@ const useFilter = () =>
                 }
             }
             catch(error){
-                setFecthErrors(error)
+                const mensaje = getErrorMessage(error);
+                setFetchErrors(mensaje)
+
+
             }
             finally{
                 setLoading(false)
@@ -138,7 +144,7 @@ export function SearchPage() {
     }, [jobs, currentPage, total]) //además, este array son dependencias de useEffect, es decir, cada vez que cambie alguna de estas variables, se va a ejecutar el useEffect, por ejemplo, cada vez que cambie el total de resultados o la página actual, se va a actualizar el título de la página con el número de resultados y la página actual.
 
 
-
+    
   return (
     <>
     <main>
@@ -156,8 +162,8 @@ export function SearchPage() {
             fetchErrors &&
             (<Modal>
 
-                <img src={errorIcon} alt="" />
-                <p> {fetchErrors.message} </p>
+                <img className = "errorIcon" src={errorIcon} alt="" />
+                <p> {fetchErrors} </p>
                 <button onClick={() => window.location.reload()}>Reintentar</button>
             </Modal>
         )}
