@@ -7,6 +7,7 @@ import errorIcon from "../src/assets/icons/errorIcon.svg"
 import { getErrorMessage } from "../helpers/Errors.jsx";
 
 const RESULT_PER_PAGE = 4;
+
 const useFilter = () =>
     {
     const initialFilterData = {
@@ -46,7 +47,6 @@ const useFilter = () =>
                 setLoading(true)
                 //URLSearchParams es una interfaz que proporciona métodos para trabajar con los parámetros de consulta de una URL. Permite crear, manipular y acceder a los parámetros de consulta de manera sencilla.
                 const params = new URLSearchParams()
-                if(!window.navigator.onLine)
 
                 //Esto se está haciendo porque desde la api del midu se hacen los filtros por medio de la url, por medio de los filter params, por ejemplo los parámetros que van después de "?"
                 if(textToFilter) params.append('text', textToFilter)
@@ -63,6 +63,7 @@ const useFilter = () =>
 
                 const response = await fetch(`https://jscamp-api.vercel.app/api/jobs?${queryParams}`) //se le pasan los parámetros a la url, por ejemplo "https://jscamp-api.vercel.app/api/jobs?text=react&technology=frontend"
                 if(response.ok){
+                    console.log(queryParams)
                     const json = await response.json()
                     setJobs(json.data)
                     setTotal(json.total)
@@ -103,7 +104,9 @@ const useFilter = () =>
 
     const handleTextFilter = (newTextToFilter) =>{
         //Esta función no se usa acá, sino que se pasa de parámetro del SearchFormSection y es usada, cuando es llamada en la otra función.
+
         setTextToFilter(newTextToFilter.toLowerCase()) 
+        console.log(textToFilter)
         setCurrentPage(1)
     }
     return {
@@ -145,28 +148,32 @@ export function SearchPage() {
     <>
     <main>
         <title>{title}</title>
+        <meta name="description" content = "Explora miles de oportunidades laborales en el sector tecnológico. Encuentra tu próximo trabajo en DEVJOBS"/>
         <SearchFormSection onSearch={handleSearch} onTextFilter = {handleTextFilter} onClearFilters={handleClearFilters} hasAtiveFilters={hasActiveFilters}/>
         
-        { loading &&(
-            <Modal>
-                Cargando... 
-                <div className="loader">
-                </div>
-            </Modal> 
-        
-        )}
-        {
-            fetchErrors &&
-            (<Modal>
+        <section>
+            <h2 style={{textAlign:'center'}}>Resultados de Búsqueda</h2>
+            { loading &&(
+                <Modal>
+                    Cargando... 
+                    <div className="loader">
+                    </div>
+                </Modal> 
+            
+            )}
+            {
+                fetchErrors &&
+                (<Modal>
 
-                <img className = "errorIcon" src={errorIcon} alt="" />
-                <p> {fetchErrors} </p>
-                <button onClick={() => window.location.reload()}>Reintentar</button>
-            </Modal>
-        )}
+                    <img className = "errorIcon" src={errorIcon} alt="" />
+                    <p> {fetchErrors} </p>
+                    <button onClick={() => window.location.reload()}>Reintentar</button>
+                </Modal>
+            )}
 
-        {!loading && !fetchErrors && (<Job_Listing jobs={jobs}/>)}
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange = {handlePageChange}/>
+            {!loading && !fetchErrors && (<Job_Listing jobs={jobs}/>)}
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange = {handlePageChange}/>
+        </section>
     </main>
     </>
   )

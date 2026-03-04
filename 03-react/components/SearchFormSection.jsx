@@ -1,6 +1,8 @@
 import { useState, useId } from "react" //Es usado para crear identificadores únicos, útil sobre todo en formularios para cuando la app sea muy grande no correr el riesgo de reutilizar nombres
 
-const useSearchForm = ({technologyId, locationId, experienceId, onSearch, onTextFilter}) => {
+let timeOutId = null // para hacer debounced mirando que se haga una llamada antes de continuar con la petición del handle change del formulario
+
+const useSearchForm = ({technologyId, locationId, experienceId, searchId, onSearch, onTextFilter}) => {
   
     const [searchText, setSearchText] = useState('')
   
@@ -10,6 +12,10 @@ const useSearchForm = ({technologyId, locationId, experienceId, onSearch, onText
             event.preventDefault()
             // const formData = new FormData(event.target) este event.target envía el botón o formulario que disparó el evento, mientras que event.currentTarget envía el formulario 
             const formData = new FormData(event.currentTarget)
+
+            if(event.target.name === searchId){
+                return //
+            }
 
             //De esta forma filters va a estar guardando la información de cada filtro aplicado
             const filters = {
@@ -25,7 +31,20 @@ const useSearchForm = ({technologyId, locationId, experienceId, onSearch, onText
         const handleTextChanged = (event) => {
             const text = event.target.value
             setSearchText(text)
-            onTextFilter(text)
+            //DEBOUNCE: Cancelar el timeOut Anterior, para cuando se escriba antes de que acabe el timeout se reinicie
+            // setTimeout(()=>{
+            //     onTextFilter(text)
+            // }, 500) // Esto solo retrasa todas las peticiones, no solo las reinicia, por eso debe meterse dentro de una variable
+
+            if(timeOutId){
+                clearTimeout(timeOutId) // esto elimina el timeout si existe, perosolo con esto no es suficiente, porque el handle submit también cambia gracias al input, por lo que se debe modificar el handle submit
+            }
+
+            timeOutId = setTimeout(()=>{
+                onTextFilter(text)
+
+            }, 500) 
+
         }
         return {searchText,
             handleSearchChanged,
@@ -41,7 +60,7 @@ function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilter
     // const handleSubmit = (event) => { antes era handle submit pero ahora tiene que ser handleChanged
     const {
         handleSearchChanged, 
-        handleTextChanged} = useSearchForm({technologyId, locationId, experienceId, onSearch, onTextFilter})
+        handleTextChanged} = useSearchForm({technologyId, locationId, experienceId,searchId, onSearch, onTextFilter})
 
     return (
         
