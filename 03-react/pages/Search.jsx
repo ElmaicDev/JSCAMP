@@ -5,22 +5,35 @@ import Pagination from "../components/Pagination.jsx"
 import { Modal } from "../components/Modal.jsx";
 import errorIcon from "../src/assets/icons/errorIcon.svg"
 import { getErrorMessage } from "../helpers/Errors.jsx";
+import { useRouter } from "../hooks/useRouter.jsx";
 
 const RESULT_PER_PAGE = 4;
 
 const useFilter = () =>
     {
-    const initialFilterData = {
-        technology: '',
-            location: '',
-            experience: ''
+    const initialFilterData = () => {
+        const params = new URLSearchParams(window.location.search)
+        return {
+            technology: params.get('tecnology') || '',
+            location: params.get('type') || '',
+            experienceLevel: params.get('level') || ''
+        }
     }
     const [filters,setFilters] = useState(() => {
         const saved = window.localStorage.getItem('jobsFilters')
         return saved ? JSON.parse(saved) : initialFilterData
     })
-    const [textToFilter, setTextToFilter] = useState('')
-    const [currentPage, setCurrentPage] = useState(1)
+    const [textToFilter, setTextToFilter] = useState(() => {
+        const params = new URLSearchParams(window.location.search)
+        return params.get('text') || ''
+    })
+
+    const [currentPage, setCurrentPage] = useState(() => {
+        const params = new URLSearchParams(window.location.search)
+        const page = Number(params.get('page'))
+        return Number.isNaN(page) ? page : 1
+    })
+
    
     const [total,setTotal] = useState(0)
     const [jobs, setJobs] = useState([])
@@ -29,6 +42,8 @@ const useFilter = () =>
 
     const [fetchErrors, setFetchErrors] = useState(null)
     const totalPages = Math.ceil(total / RESULT_PER_PAGE)
+
+    const {navigateTo} = useRouter()
 
     const handleClearFilters = () =>{
 
@@ -63,7 +78,6 @@ const useFilter = () =>
 
                 const response = await fetch(`https://jscamp-api.vercel.app/api/jobs?${queryParams}`) //se le pasan los parámetros a la url, por ejemplo "https://jscamp-api.vercel.app/api/jobs?text=react&technology=frontend"
                 if(response.ok){
-                    console.log(queryParams)
                     const json = await response.json()
                     setJobs(json.data)
                     setTotal(json.total)
@@ -87,11 +101,28 @@ const useFilter = () =>
     ,[filters,textToFilter,currentPage]) //con el arreglo vacío solo se renderiza el effect la primer vez
 
     useEffect(() => {
+
+        const params = new URLSearchParams()
+        if(textToFilter) params.append('text',textToFilter)
+        if(filters.technology) params.append('technology', filters.technology)
+        if(filters.location) params.append('type', filters.location)
+        if(filters.experience) params.append('level', filters.experience)
+        
+        if(currentPage > 1) params.append('page', currentPage)
+
+        const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname
+
+        navigateTo(newUrl)
+
+        },[filters,textToFilter,currentPage,navigateTo])
+
+    useEffect(() => {
         window.localStorage.setItem('jobsFilters', JSON.stringify(filters))
 
     },[filters])
 
     const handlePageChange = (page) => { 
+        console.log(page)
         setCurrentPage(page)
     }
 
@@ -118,6 +149,7 @@ const useFilter = () =>
         hasActiveFilters,
         fetchErrors,
         canShowModal : !!fetchErrors,
+        textToFilter,
         handlePageChange,
         handleSearch,
         handleTextFilter,
@@ -135,6 +167,7 @@ export function SearchPage() {
         totalPages,
         hasActiveFilters,
         fetchErrors,
+        textToFilter,
         handlePageChange,
         handleSearch,
         handleTextFilter,
@@ -149,7 +182,7 @@ export function SearchPage() {
     <main>
         <title>{title}</title>
         <meta name="description" content = "Explora miles de oportunidades laborales en el sector tecnológico. Encuentra tu próximo trabajo en DEVJOBS"/>
-        <SearchFormSection onSearch={handleSearch} onTextFilter = {handleTextFilter} onClearFilters={handleClearFilters} hasAtiveFilters={hasActiveFilters}/>
+        <SearchFormSection initialText = {textToFilter} onSearch={handleSearch} onTextFilter = {handleTextFilter} onClearFilters={handleClearFilters} hasAtiveFilters={hasActiveFilters}/>
         
         <section>
             <h2 style={{textAlign:'center'}}>Resultados de Búsqueda</h2>

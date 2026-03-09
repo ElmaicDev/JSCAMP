@@ -53,7 +53,7 @@ const useSearchForm = ({technologyId, locationId, experienceId, searchId, onSear
         }
 }
 
-function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilters}) {
+function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilters,initialText}) {
     const searchId = useId()
     const technologyId = useId()
     const locationId = useId()
@@ -76,7 +76,13 @@ function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilter
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                         
                         {/* Acá se está guardadndo el componente, el query selector dentro del useRef porque los elementos no cambian entre renderizados, esta es la forma en la cual react trabaja para no manipular el dom entre query selector. */}
-                        <input ref = {inputRef} onChange = {handleTextChanged} name={searchId} id="empleos-search-input" type="text" placeholder="Buscar empleos por título, habilidad o empresa" />
+                        <input ref = {inputRef} 
+                            onChange = {handleTextChanged} 
+                            name={searchId} 
+                            id="empleos-search-input" 
+                            type="text" 
+                            placeholder="Buscar empleos por título, habilidad o empresa"
+                            defaultValue={initialText} />
                     </div>
                     <div className="filtros">
                         <select name={technologyId} id="filter-technology">
