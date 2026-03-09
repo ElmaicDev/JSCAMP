@@ -1,9 +1,10 @@
-import { useState, useId } from "react" //Es usado para crear identificadores únicos, útil sobre todo en formularios para cuando la app sea muy grande no correr el riesgo de reutilizar nombres
+import { useState, useId, useRef } from "react" //Es usado para crear identificadores únicos, útil sobre todo en formularios para cuando la app sea muy grande no correr el riesgo de reutilizar nombres
 
-let timeOutId = null // para hacer debounced mirando que se haga una llamada antes de continuar con la petición del handle change del formulario
 
 const useSearchForm = ({technologyId, locationId, experienceId, searchId, onSearch, onTextFilter}) => {
   
+    // mejor dicho, useref es un hook que persiste entre renderizados.
+    const timeOutId = useRef(null) // el use ref mantiene el valor de forma global sin necesidad de volver a renderizar el componente de nuevo 
     const [searchText, setSearchText] = useState('')
   
     const handleSearchChanged = (event) => {
@@ -36,11 +37,11 @@ const useSearchForm = ({technologyId, locationId, experienceId, searchId, onSear
             //     onTextFilter(text)
             // }, 500) // Esto solo retrasa todas las peticiones, no solo las reinicia, por eso debe meterse dentro de una variable
 
-            if(timeOutId){
-                clearTimeout(timeOutId) // esto elimina el timeout si existe, perosolo con esto no es suficiente, porque el handle submit también cambia gracias al input, por lo que se debe modificar el handle submit
+            if(timeOutId.current){
+                clearTimeout(timeOutId.current) // esto elimina el timeout si existe, perosolo con esto no es suficiente, porque el handle submit también cambia gracias al input, por lo que se debe modificar el handle submit
             }
 
-            timeOutId = setTimeout(()=>{
+            timeOutId.current = setTimeout(()=>{
                 onTextFilter(text)
 
             }, 500) 
@@ -57,6 +58,8 @@ function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilter
     const technologyId = useId()
     const locationId = useId()
     const experienceId = useId()
+
+    const inputRef = useRef()
     // const handleSubmit = (event) => { antes era handle submit pero ahora tiene que ser handleChanged
     const {
         handleSearchChanged, 
@@ -71,7 +74,9 @@ function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilter
             <form onChange={handleSearchChanged} role="search" id="empleos-search-form">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                        <input onChange = {handleTextChanged} name={searchId} id="empleos-search-input" type="text" placeholder="Buscar empleos por título, habilidad o empresa" />
+                        
+                        {/* Acá se está guardadndo el componente, el query selector dentro del useRef porque los elementos no cambian entre renderizados, esta es la forma en la cual react trabaja para no manipular el dom entre query selector. */}
+                        <input ref = {inputRef} onChange = {handleTextChanged} name={searchId} id="empleos-search-input" type="text" placeholder="Buscar empleos por título, habilidad o empresa" />
                     </div>
                     <div className="filtros">
                         <select name={technologyId} id="filter-technology">
