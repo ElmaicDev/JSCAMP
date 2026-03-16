@@ -6,6 +6,8 @@ import { Modal } from "../components/Modal.jsx";
 import errorIcon from "../src/assets/icons/errorIcon.svg"
 import { getErrorMessage } from "../helpers/Errors.jsx";
 import { Navigate, useSearchParams } from "react-router";
+import { BreadCrumb } from "../components/Breadcrumb"
+
 const RESULT_PER_PAGE = 4;
 
 const useFilter = () =>
@@ -16,7 +18,7 @@ const useFilter = () =>
     const [filters,setFilters] = useState(() => {
         const saved = window.localStorage.getItem('jobsFilters')
         return saved ? JSON.parse(saved) : {
-            technology: searchParams.get('tecnology') || '',
+            technology: searchParams.get('technology') || '',
             location: searchParams.get('type') || '',
             experienceLevel: searchParams.get('level') || ''
         }
@@ -26,8 +28,8 @@ const useFilter = () =>
     const [textToFilter, setTextToFilter] = useState(() => searchParams.get('text') || '') // sin las llaves ni el return, lo que retorna la arrow function es la primer expresion.
 
     const [currentPage, setCurrentPage] = useState(() => {
-        const page = Number(searchParams.get('page'))
-        return Number.isNaN(page) ? page : 1
+        const page = Number(searchParams.get('page')) 
+        return Number.isNaN(page) || page == 0? 1 : page
     })
 
    
@@ -70,7 +72,7 @@ const useFilter = () =>
                 if(textToFilter) params.append('text', textToFilter)
                 if(filters.technology) params.append('technology', filters.technology)
                 if(filters.location) params.append('type', filters.location)
-                if(filters.experience) params.append('level', filters.experience)
+                if(filters.experienceLevel) params.append('level', filters.experienceLevel)
                 
                 const offset = (currentPage - 1) * RESULT_PER_PAGE
                 params.append('limit', RESULT_PER_PAGE) // la cantidad de resultados por página
@@ -113,7 +115,7 @@ const useFilter = () =>
             else params.delete('technology')
             if(filters.location) params.set('type', filters.location)
             else params.delete('type')
-            if(filters.experience) params.set('level', filters.experience)
+            if(filters.experienceLevel) params.set('level', filters.experienceLevel)
             else params.delete('level')
             
             if(currentPage > 1) params.set('page', currentPage)
@@ -134,16 +136,18 @@ const useFilter = () =>
 
     // },[filters])
 
-    const handlePageChange = (page) => { 
-        console.log(page)
+    const handlePageChange = (page) => {   
         setCurrentPage(page)
+        if(page > 1) searchParams.set('page', page)
+        else searchParams.delete('page')
     }
 
         
     const handleSearch = (filters) => {
-        setCurrentPage(1)
-        setFilters(filters)
         setHasActiveFilters(true)
+        setCurrentPage(1)
+        searchParams.delete('page')
+        setFilters(filters)
     }
 
     const handleTextFilter = (newTextToFilter) =>{
@@ -152,6 +156,8 @@ const useFilter = () =>
         setTextToFilter(newTextToFilter.toLowerCase()) 
         console.log(textToFilter)
         setCurrentPage(1)
+        searchParams.delete('page')
+
     }
     return {
         loading,
@@ -193,9 +199,15 @@ export default function SearchPage() {
   return (
     <>
     <main>
+        
         <title>{title}</title>
         <meta name="description" content = "Explora miles de oportunidades laborales en el sector tecnológico. Encuentra tu próximo trabajo en DEVJOBS"/>
-        <SearchFormSection initialText = {textToFilter} onSearch={handleSearch} onTextFilter = {handleTextFilter} onClearFilters={handleClearFilters} hasAtiveFilters={hasActiveFilters}/>
+        <BreadCrumb/>
+        <SearchFormSection 
+            initialText = {textToFilter} 
+            onSearch={handleSearch} 
+            onTextFilter = {handleTextFilter} 
+            onClearFilters={handleClearFilters} hasActiveFilters={hasActiveFilters}/>
         
         <section>
             <h2 style={{textAlign:'center'}}>Resultados de Búsqueda</h2>

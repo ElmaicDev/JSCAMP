@@ -1,4 +1,6 @@
 import { useRouter } from "../hooks/useRouter"
+import { BreadCrumb } from "../components/Breadcrumb"
+
 
 export default function HomePage(){
 
@@ -31,7 +33,7 @@ export default function HomePage(){
             </section>
 
             <section>
-                
+                <BreadCrumb/>
                 <header>
                     <h2>¿Por qué DevJobs?</h2>
                     <p>DevJobs es la principal plataforma de búsqueda de empleo para    desarrolladores. Conectamos a los mejores

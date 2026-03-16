@@ -23,7 +23,7 @@ const useSearchForm = ({technologyId, locationId, experienceId, searchId, onSear
                 search: formData.get(searchText),
                 technology: formData.get(technologyId),
                 location: formData.get(locationId),
-                experience: formData.get(experienceId)
+                experienceLevel: formData.get(experienceId)
             }
 
             onSearch(filters)
@@ -53,7 +53,7 @@ const useSearchForm = ({technologyId, locationId, experienceId, searchId, onSear
         }
 }
 
-function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilters,initialText}) {
+function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasActiveFilters,initialText}) {
     const searchId = useId()
     const technologyId = useId()
     const locationId = useId()
@@ -64,6 +64,7 @@ function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilter
     const {
         handleSearchChanged, 
         handleTextChanged} = useSearchForm({technologyId, locationId, experienceId,searchId, onSearch, onTextFilter})
+
 
     return (
         
@@ -119,7 +120,7 @@ function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilter
                         <option value="senior">Senior</option>
                         <option value="lead">Lead</option>
                     </select>
-                    {hasAtiveFilters || !!initialText && <button onClick={onClearFilters} type="button">Limpiar filtros</button>}
+                    {(hasActiveFilters || !!initialText) && <button onClick={onClearFilters} type="button">Limpiar filtros</button>}
                 </div>
                 </form>
         </section> 
