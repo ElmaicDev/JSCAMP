@@ -1,30 +1,18 @@
-import { useEffect, useState } from "react"
+import { useNavigate, useLocation } from "react-router"
 
 // Así se puede definir un custom hook.
 export function useRouter(){
-    const [currentPath,setCurrentPath] = useState(window.location.pathname)  
+    const navigate = useNavigate() // permite navegar de forma programática 
+    const location = useLocation() // nos devuelve el currentPath de nuestra url, query params y url completa 
+  
 
-    useEffect(()=>{
-    const handleLocationChanged = () => {
-        setCurrentPath(window.location.pathname)
-      }
-
-      window.addEventListener('popstate', handleLocationChanged)
-
-      return () => 
-      {
-        window.removeEventListener('popstate',handleLocationChanged)
-      }
-  },[])
-
-  function navigateTo(path){
-    window.history.pushState({},'',path) //Esto indica que cambie la historia de la ventana, es decir, cuando esto cambia, cambia la url
-    window.dispatchEvent(new PopStateEvent('popstate')) // esto es para enviar un evento. El popState es un evento que avisa que la url cambió.
-    
-  }
+    function navigateTo(path){
+      navigate(path)
+      
+    }
 
   return {
-    currentPath,
+    currentPath: location.pathname,
     navigateTo
   }
 }
