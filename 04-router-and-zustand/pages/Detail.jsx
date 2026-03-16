@@ -34,7 +34,8 @@ export function JobDetail(){
         fetch(`https://jscamp-api.vercel.app/api/jobs/${JobId}`)
         .then(res =>{
             if(!res.ok){
-                throw new Error('Job Not Found')
+                navigate('/not-found') // navigate sirve para navegar de forma progrmática, sin necesidad de hacer click en ningú lado, pero Link, si es redirección desde un click
+                // No es correcto usar el navigate como si fuera un div porque no se va a poner el anchor en el html del dom y google no lo va a encontrar.
             }
             return res.json()
         })

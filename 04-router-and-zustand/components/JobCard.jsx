@@ -1,4 +1,6 @@
 import React from "react"
+import { Link } from "./Link"
+import styles from './JobCard.module.css'
 
 function JobCard({job}){
 
@@ -23,12 +25,22 @@ function JobCard({job}){
             data-experiencia={job.data.nivel}
             data-technology = {job.data.technology}>
             <div>
-                <h2>{job.titulo}</h2>
+                <h2>
+                    <Link className={styles.title} href={`/jobs/${job.id}`}>
+                        {job.titulo}
+                    </Link>
+                </h2>
                 <small>{job.empresa} | {job.data.modalidad}</small>
                 <p>{job.descripcion}</p>
             </div>
-            <button className={`button-apply-job ${buttonClass}`}
-            onClick={handleClick}>{text}</button>
+
+            <div className={styles.actions}>
+                <Link className={styles.details} href={`/jobs/${job.id}`}>
+                    Ver Detalles
+                </Link>
+                <button className={`button-apply-job ${buttonClass}`}
+                onClick={handleClick}>{text}</button>
+            </div>
 
 
         </article>
