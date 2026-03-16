@@ -49,7 +49,7 @@ export function JobDetail(){
         .finally(() => {
             setLoading(false)
         })
-    }, [JobId])
+    }, [JobId, navigate])
 
     if(loading){
         return <Modal>

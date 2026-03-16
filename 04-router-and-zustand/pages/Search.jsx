@@ -5,32 +5,31 @@ import Pagination from "../components/Pagination.jsx"
 import { Modal } from "../components/Modal.jsx";
 import errorIcon from "../src/assets/icons/errorIcon.svg"
 import { getErrorMessage } from "../helpers/Errors.jsx";
-import { useRouter } from "../hooks/useRouter.jsx";
-
+import { useSearchParams } from "react-router";
 const RESULT_PER_PAGE = 4;
 
 const useFilter = () =>
     {
     const initialFilterData = () => {
-        const params = new URLSearchParams(window.location.search)
         return {
-            technology: params.get('tecnology') || '',
-            location: params.get('type') || '',
-            experienceLevel: params.get('level') || ''
+            technology: searchParams.get('tecnology') || '',
+            location: searchParams.get('type') || '',
+            experienceLevel: searchParams.get('level') || ''
         }
     }
+
+    const [searchParams, setSearchParams] = useSearchParams()
+
     const [filters,setFilters] = useState(() => {
         const saved = window.localStorage.getItem('jobsFilters')
         return saved ? JSON.parse(saved) : initialFilterData
     })
-    const [textToFilter, setTextToFilter] = useState(() => {
-        const params = new URLSearchParams(window.location.search)
-        return params.get('text') || ''
-    })
+
+    // Si se inicializa, con una arrow function, este componente solo se ejecuta una vez, sino, si se pone directamente searchParams, se renderiza siempre.
+    const [textToFilter, setTextToFilter] = useState(() => searchParams.get('text') || '') // sin las llaves ni el return, lo que retorna la arrow function es la primer expresion.
 
     const [currentPage, setCurrentPage] = useState(() => {
-        const params = new URLSearchParams(window.location.search)
-        const page = Number(params.get('page'))
+        const page = Number(searchParams.get('page'))
         return Number.isNaN(page) ? page : 1
     })
 
@@ -43,7 +42,6 @@ const useFilter = () =>
     const [fetchErrors, setFetchErrors] = useState(null)
     const totalPages = Math.ceil(total / RESULT_PER_PAGE)
 
-    const {navigateTo} = useRouter()
 
     const handleClearFilters = () =>{
 
@@ -102,24 +100,30 @@ const useFilter = () =>
 
     useEffect(() => {
 
-        const params = new URLSearchParams()
-        if(textToFilter) params.append('text',textToFilter)
-        if(filters.technology) params.append('technology', filters.technology)
-        if(filters.location) params.append('type', filters.location)
-        if(filters.experience) params.append('level', filters.experience)
-        
-        if(currentPage > 1) params.append('page', currentPage)
+        setSearchParams((params) => {
+            //acá antes de .set era un append, pero porque ya no necesita agregarlos sino setearlos
+            if(textToFilter) params.set('text',textToFilter)
+            if(filters.technology) params.set('technology', filters.technology)
+            if(filters.location) params.set('type', filters.location)
+            if(filters.experience) params.set('level', filters.experience)
+            
+            if(currentPage > 1) params.set('page', currentPage)
+    
+            return params
 
-        const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname
+            // esto ya no se necesita porque SetSearchParams, solo necesita devolver los nuevos parámetros
+            // const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname
+    
+            // navigateTo(newUrl)
+        })
 
-        navigateTo(newUrl)
+        },[filters,textToFilter,currentPage,setSearchParams])
 
-        },[filters,textToFilter,currentPage,navigateTo])
+    // Este efecto me está haciendo un problema porque a veces guarda ciudad de méxico pero no actualiza bien.
+    // useEffect(() => {
+    //     window.localStorage.setItem('jobsFilters', JSON.stringify(filters))
 
-    useEffect(() => {
-        window.localStorage.setItem('jobsFilters', JSON.stringify(filters))
-
-    },[filters])
+    // },[filters])
 
     const handlePageChange = (page) => { 
         console.log(page)
