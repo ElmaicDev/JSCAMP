@@ -552,3 +552,11 @@ footer {
   color: #3b82f6;
   font-weight: bold;
 }
+
+.nav-link-active{
+  pointer-events: none;
+  color: white;
+  opacity: 0.3;
+ 
+
+}

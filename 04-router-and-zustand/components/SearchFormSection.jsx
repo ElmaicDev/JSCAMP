@@ -6,7 +6,7 @@ const useSearchForm = ({technologyId, locationId, experienceId, searchId, onSear
     // mejor dicho, useref es un hook que persiste entre renderizados.
     const timeOutId = useRef(null) // el use ref mantiene el valor de forma global sin necesidad de volver a renderizar el componente de nuevo 
     const [searchText, setSearchText] = useState('')
-  
+    
     const handleSearchChanged = (event) => {
             
 
@@ -119,7 +119,7 @@ function SearchFormSection({onSearch, onTextFilter,onClearFilters,hasAtiveFilter
                         <option value="senior">Senior</option>
                         <option value="lead">Lead</option>
                     </select>
-                    {hasAtiveFilters && <button onClick={onClearFilters} type="button">Limpiar filtros</button>}
+                    {hasAtiveFilters || !!initialText && <button onClick={onClearFilters} type="button">Limpiar filtros</button>}
                 </div>
                 </form>
         </section> 

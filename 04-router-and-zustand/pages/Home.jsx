@@ -1,6 +1,6 @@
 import { useRouter } from "../hooks/useRouter"
 
-export function HomePage(){
+export default function HomePage(){
 
     const {navigateTo} = useRouter()
     const handleSearch = (event) => {
@@ -9,8 +9,7 @@ export function HomePage(){
         const searchTerm = formData.get('search')
 
         // search?text = loquesea es la misma URI pero con datos adicionales, que se muestran, no necesariamente es otra uri.
-        const url = searchTerm ? `/search?text = ${encodeURI(searchTerm)}` : '/search' // encode uri codifica la url para manejar espacios
-
+        const url = searchTerm ? `/search?text=${encodeURIComponent(searchTerm)}` : '/search' // encode uri codifica la url para manejar espacios, entonces lo mejor acá es no dejar espacios nunca
         navigateTo(url)
 
     }

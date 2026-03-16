@@ -1,4 +1,4 @@
-export function NotFoundPage(){
+export default function NotFoundPage(){
     return(
         <div>
             <h1>Página No Encontrada</h1>

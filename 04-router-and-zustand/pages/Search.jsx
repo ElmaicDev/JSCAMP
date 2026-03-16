@@ -5,24 +5,21 @@ import Pagination from "../components/Pagination.jsx"
 import { Modal } from "../components/Modal.jsx";
 import errorIcon from "../src/assets/icons/errorIcon.svg"
 import { getErrorMessage } from "../helpers/Errors.jsx";
-import { useSearchParams } from "react-router";
+import { Navigate, useSearchParams } from "react-router";
 const RESULT_PER_PAGE = 4;
 
 const useFilter = () =>
     {
-    const initialFilterData = () => {
-        return {
-            technology: searchParams.get('tecnology') || '',
-            location: searchParams.get('type') || '',
-            experienceLevel: searchParams.get('level') || ''
-        }
-    }
 
     const [searchParams, setSearchParams] = useSearchParams()
 
     const [filters,setFilters] = useState(() => {
         const saved = window.localStorage.getItem('jobsFilters')
-        return saved ? JSON.parse(saved) : initialFilterData
+        return saved ? JSON.parse(saved) : {
+            technology: searchParams.get('tecnology') || '',
+            location: searchParams.get('type') || '',
+            experienceLevel: searchParams.get('level') || ''
+        }
     })
 
     // Si se inicializa, con una arrow function, este componente solo se ejecuta una vez, sino, si se pone directamente searchParams, se renderiza siempre.
@@ -45,9 +42,17 @@ const useFilter = () =>
 
     const handleClearFilters = () =>{
 
-        setFilters(initialFilterData)
+
+        setFilters({
+            technology:  '',
+            location: '',
+            experienceLevel:  ''
+        })
+       
+        setTextToFilter('')
         window.localStorage.removeItem('jobsFilters')
-        return setHasActiveFilters(false);
+        setHasActiveFilters(false);
+        setCurrentPage(1)
     }
 
     
@@ -103,9 +108,13 @@ const useFilter = () =>
         setSearchParams((params) => {
             //acá antes de .set era un append, pero porque ya no necesita agregarlos sino setearlos
             if(textToFilter) params.set('text',textToFilter)
+            else params.delete('text')
             if(filters.technology) params.set('technology', filters.technology)
+            else params.delete('technology')
             if(filters.location) params.set('type', filters.location)
+            else params.delete('type')
             if(filters.experience) params.set('level', filters.experience)
+            else params.delete('level')
             
             if(currentPage > 1) params.set('page', currentPage)
     
@@ -161,7 +170,7 @@ const useFilter = () =>
     }
 }
 
-export function SearchPage() {
+export default function SearchPage() {
 
     const{
         jobs,

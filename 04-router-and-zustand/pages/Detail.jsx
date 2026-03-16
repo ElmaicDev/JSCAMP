@@ -22,7 +22,7 @@ function JobSection({title,content}){
     )
 }
 
-export function JobDetail(){
+export default function JobDetail(){
     const {JobId} = useParams() // el nombre de este parámetro es el que se le asigna a la ruta en Route.
     const [job, setJob] = useState(null)
     const [loading, setLoading] = useState(false)
