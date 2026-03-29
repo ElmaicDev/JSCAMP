@@ -1,7 +1,7 @@
 import { Link } from "./Link"
 import { NavLink } from "react-router"
 
-export function Header(){
+export function Header({isLoggedIn, onLogin, onLogout}) {
     return(
         <header>
             <Link href={'/'} style={{textDecoration: 'none', color: 'inherit'}}>
@@ -15,6 +15,12 @@ export function Header(){
                 <NavLink className={({isActive}) => isActive ? 'nav-link-active' : ""} to="/search">Empleos</NavLink>
                 <NavLink className={({isActive}) => isActive ? 'nav-link-active' : ""} to="/contact">Contacto</NavLink>
             </nav>
+
+            {
+                isLoggedIn 
+                ? <button onClick={onLogout}>Cerrar sesión</button>
+                : <button onClick={onLogin}>Iniciar sesión</button>
+            }
     </header>
     )
 }

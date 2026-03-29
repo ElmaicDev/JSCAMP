@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react"
 import { Routes, Route } from "react-router"
+import { useState } from "react"
 
 // import { HomePage } from "../pages/Home.jsx"
 // import { SearchPage } from "../pages/Search.jsx"
@@ -17,11 +18,19 @@ const ContactPage = lazy(() => import('../pages/Contact.jsx'))
 const JobDetail = lazy(() => import('../pages/Detail.jsx'))
 
 function App() {
-    
 
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    
+    const handleLogin = () => {
+      setIsLoggedIn(true)
+    }
+
+    const handleLogout = () => {
+      setIsLoggedIn(false)
+    } 
     return (
     <>
-        <Header></Header>
+        <Header isLoggedIn={isLoggedIn} onLogin={handleLogin} onLogout={handleLogout}></Header>
         
         {/* Sirve para que si el internet está muy lento, muestre que la página está cargando mientras carga los archivos necesarios del lazy load */}
         <Suspense> 
@@ -30,7 +39,7 @@ function App() {
             {/* Route es cada ruta individual */}
             <Route path="/" element={<HomePage/>} />
             <Route path="/search" element={<SearchPage/>} />
-            <Route path="/jobs/:JobId" element={<JobDetail/>} />
+            <Route path="/jobs/:JobId" element={<JobDetail isLoggedIn = {isLoggedIn}/>} />
             <Route path="/contact" element={<ContactPage/>}/>
             <Route path="*" element={<NotFoundPage/>} />
           </Routes>

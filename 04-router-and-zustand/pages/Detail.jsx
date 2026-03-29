@@ -22,7 +22,40 @@ function JobSection({title,content}){
     )
 }
 
-export default function JobDetail(){
+function DetailPageBreadCrumb({job}){
+                <div className={styles.container}>
+                    <nav className={styles.breadcrumb}>
+                        <Link to='/search'
+                        className={styles.breadcrumbButton}>
+                            Empleos
+                        </Link>
+                        <span className={styles.breadcrumbSeparator}>/</span>
+                        <span className={styles.breadcrumbCurrent}>{job.titulo}</span>
+                    </nav>
+                </div>
+
+}
+function DetailPageHeader({job, isLoggedIn}){
+
+   return( 
+    <>
+    <header className={styles.header}>
+        <h1 className={styles.title}>
+            {job.titulo}
+        </h1>
+        <p className={styles.meta}>
+            {job.empresa} ~ {job.ubicacion}
+        </p>
+    </header>
+
+    <button disabled = {!isLoggedIn} className={styles.applyButton}>
+        {isLoggedIn ? 'Aplicar Ahora' : 'Inicia sesión para aplicar'}
+    </button>
+    </>
+            )
+}
+
+export default function JobDetail({isLoggedIn}) {
     const {JobId} = useParams() // el nombre de este parámetro es el que se le asigna a la ruta en Route.
     const [job, setJob] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -68,30 +101,10 @@ export default function JobDetail(){
 
     return (
         <>
-           <div style = {{maxWidth: '1280px', margin: '0 auto', padding: '0 1 rem'}}>
-                <div className={styles.container}>
-                    <nav className={styles.breadcrumb}>
-                        <Link to='/search'
-                        className={styles.breadcrumbButton}>
-                            Empleos
-                        </Link>
-                        <span className={styles.breadcrumbSeparator}>/</span>
-                        <span className={styles.breadcrumbCurrent}>{job.titulo}</span>
-                    </nav>
-                </div>
-
-                <header className={styles.header}>
-                    <h1 className={styles.title}>
-                        {job.titulo}
-                    </h1>
-                    <p className={styles.meta}>
-                        {job.empresa} ~ {job.ubicacion}
-                    </p>
-                </header>
-
-                <button className={styles.applyButton}>
-                    Aplicar Ahora
-                </button>
+        <div style = {{maxWidth: '1280px', margin: '0 auto', padding: '0 1 rem'}}>
+                <DetailPageBreadCrumb job={job} />
+                <DetailPageHeader job={job} isLoggedIn={isLoggedIn}/>
+                
 
                 <JobSection title="Descripción del puesto" content={job.content.description}/>
                 <JobSection title="Responsabilidades del puesto" content={job.content.responsibilities}/>

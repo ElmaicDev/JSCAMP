@@ -14,3 +14,13 @@ The React Compiler is currently not compatible with SWC. See [this issue](https:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+## PROP DRILLING
+
+Es cuando a una infinidad de componentes se le debe pasar una propiedad para que todos los componentes reaccionen a su cambio. Esto viene con un problema gigantesco, porque genera que se vuelvan a renderizar todos los componentes.
+
+Para solucionar el prop drilling se puede de 2 formas:
+
+1. Composición de componentes: Se podría aprovechar la composción y en lugar de crear componentes, pasarlo a una función como children. Pero esto no soluciona el problema del todo. No es tan cómodo.
+2. React Context: Api que permite tener estado global sin tener que pasar las props en cada nivel.
