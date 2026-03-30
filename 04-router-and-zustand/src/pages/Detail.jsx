@@ -4,7 +4,8 @@ import { Modal } from "../components/Modal"
 import snarkdown from  'snarkdown' // esta dependencia sirve para convertir de markDown a html
 import styles from './Detail.module.css'
 import { Link } from "../components/Link"
-import { useAuth } from "../context/AuthContext"
+import { useAuthStore } from "../store/authStore"
+import { useFavoritesStore } from "../store/favoritesStore"
 
 function JobSection({title,content}){
 
@@ -56,13 +57,25 @@ function DetailPageHeader({job}){
 
 function DetailApplyButton(){
 
-    const {isLoggedIn} = useAuth()
+    const {isLoggedIn} = useAuthStore()
     return(
 
         <button disabled = {!isLoggedIn} className={styles.applyButton}>
             {isLoggedIn ? 'Aplicar Ahora' : 'Inicia sesión para aplicar'}
         </button>
     )
+}
+
+function DetailFavoriteButton({jobId}){
+    // Se suscribe a toda la store, por eso se renderizan otros corazones de la store.
+    const {toggleFavorite, isFavorite} = useFavoritesStore()
+
+    return (
+        <button onClick={() => toggleFavorite(jobId)}>
+                    {isFavorite(jobId) ? '❤️' : '🤍'}
+        </button>
+    )
+
 }
 
 export default function JobDetail({isLoggedIn}) {
@@ -115,6 +128,7 @@ export default function JobDetail({isLoggedIn}) {
                 <DetailPageBreadCrumb job={job} />
                 <DetailPageHeader job={job} isLoggedIn={isLoggedIn}/>
                 <DetailApplyButton/>
+                <DetailFavoriteButton jobId={job.id}/>
 
                 <JobSection title="Descripción del puesto" content={job.content.description}/>
                 <JobSection title="Responsabilidades del puesto" content={job.content.responsibilities}/>

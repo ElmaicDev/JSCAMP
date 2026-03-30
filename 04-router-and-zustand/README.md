@@ -50,3 +50,8 @@ Use sirve para ller contextos y promesas.
 ## ZUSTAND
 
 Es una biblioteca minimalista para manejar el estado global, en alemán significa "estado". Es ultra ligera (pesa 1k), y no existen providers y solo renderiza los componentes necesarios.
+
+
+Para usar se importa create que es usado para crear una store y te devuelve un custom hook y debe recibir como parámetro una función que con set y get.
+
+Cuando se hacen componentes con estados globales, es bueno separarlos para que no se re-rendericen componentes que no tienen sentido, por eso, en jobcard, se separó el botón de favoritos.

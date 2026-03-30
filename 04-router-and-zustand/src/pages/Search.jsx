@@ -3,7 +3,7 @@ import SearchFormSection from "../components/SearchFormSection.jsx"
 import Job_Listing from "../components/Job_Listings.jsx" //se puede cambiar el nombre como {Job_Listing as Job}
 import Pagination from "../components/Pagination.jsx"
 import { Modal } from "../components/Modal.jsx";
-import errorIcon from "../src/assets/icons/errorIcon.svg"
+import errorIcon from "../assets/icons/errorIcon.svg"
 import { getErrorMessage } from "../helpers/Errors.jsx";
 import { Navigate, useSearchParams } from "react-router";
 import { BreadCrumb } from "../components/Breadcrumb"
