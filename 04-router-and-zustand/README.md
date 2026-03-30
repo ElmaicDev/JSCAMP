@@ -24,3 +24,29 @@ Para solucionar el prop drilling se puede de 2 formas:
 
 1. Composición de componentes: Se podría aprovechar la composción y en lugar de crear componentes, pasarlo a una función como children. Pero esto no soluciona el problema del todo. No es tan cómodo.
 2. React Context: Api que permite tener estado global sin tener que pasar las props en cada nivel.
+
+### Create Context
+
+Para eso se debe importar de react el createContext, esto se hace para utentificación. 
+
+export const AuthContext = createCOntext()
+
+Para el context se necesitan dos cosas: 
+
+1. Proveedor: Quien provee la información. El proveedor debe envolver la aplicación, por lo que debe recibir como prop un children.
+2. Consumidor: El que consume la información
+
+Desde la últimas actualizaciones de react ya no se necesita usar el hook de useContext porque el hook use ya lo hace por defecto. Es exactamente lo mismo.
+
+Use sirve para ller contextos y promesas.
+
+### Cuando usar prop Drilling o context.
+
+- PropDrilling: Mejor para 1 o 2, máximo 3 niveles.
+- Context API: Está pensado para estados que no cambia mucho, que son poco frecuentes. Representa : Estado global, autenticación, tema, idioma... Pero cuando la app es más grande, se necesitan bibliotecas como zustand que simplifica más los estados globales.
+
+  Se pueden usar tantos providers como se necesiten. Incluso el Browser Router es un provider.
+
+## ZUSTAND
+
+Es una biblioteca minimalista para manejar el estado global, en alemán significa "estado". Es ultra ligera (pesa 1k), y no existen providers y solo renderiza los componentes necesarios.

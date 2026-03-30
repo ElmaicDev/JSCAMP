@@ -4,6 +4,7 @@ import { Modal } from "../components/Modal"
 import snarkdown from  'snarkdown' // esta dependencia sirve para convertir de markDown a html
 import styles from './Detail.module.css'
 import { Link } from "../components/Link"
+import { useAuth } from "../context/AuthContext"
 
 function JobSection({title,content}){
 
@@ -35,7 +36,7 @@ function DetailPageBreadCrumb({job}){
                 </div>
 
 }
-function DetailPageHeader({job, isLoggedIn}){
+function DetailPageHeader({job}){
 
    return( 
     <>
@@ -48,11 +49,20 @@ function DetailPageHeader({job, isLoggedIn}){
         </p>
     </header>
 
-    <button disabled = {!isLoggedIn} className={styles.applyButton}>
-        {isLoggedIn ? 'Aplicar Ahora' : 'Inicia sesión para aplicar'}
-    </button>
+    
     </>
-            )
+    )
+}
+
+function DetailApplyButton(){
+
+    const {isLoggedIn} = useAuth()
+    return(
+
+        <button disabled = {!isLoggedIn} className={styles.applyButton}>
+            {isLoggedIn ? 'Aplicar Ahora' : 'Inicia sesión para aplicar'}
+        </button>
+    )
 }
 
 export default function JobDetail({isLoggedIn}) {
@@ -104,7 +114,7 @@ export default function JobDetail({isLoggedIn}) {
         <div style = {{maxWidth: '1280px', margin: '0 auto', padding: '0 1 rem'}}>
                 <DetailPageBreadCrumb job={job} />
                 <DetailPageHeader job={job} isLoggedIn={isLoggedIn}/>
-                
+                <DetailApplyButton/>
 
                 <JobSection title="Descripción del puesto" content={job.content.description}/>
                 <JobSection title="Responsabilidades del puesto" content={job.content.responsibilities}/>
