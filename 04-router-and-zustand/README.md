@@ -55,3 +55,11 @@ Es una biblioteca minimalista para manejar el estado global, en alemán signific
 Para usar se importa create que es usado para crear una store y te devuelve un custom hook y debe recibir como parámetro una función que con set y get.
 
 Cuando se hacen componentes con estados globales, es bueno separarlos para que no se re-rendericen componentes que no tienen sentido, por eso, en jobcard, se separó el botón de favoritos.
+
+### RUTAS PROTEGIDAS
+
+Las rutas protegidas se hacen junto con zustand porque me permiten almacenar de manera global si el usuario está loggeado o no. 
+
+En react Router no se permite que la ruta protegida envuelva a la etiqueta Route, sino que debe envolver el elemento (el children que será pasado)
+
+RECOMENDACIÓN: Cuando un usuario cierre sesión es mejor refrescar la página para evitar otros estados intermedios.
