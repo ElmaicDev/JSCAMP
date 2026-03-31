@@ -1,0 +1,53 @@
+import { Link } from "./Link"
+import { NavLink } from "react-router"
+import { useAuthStore } from "../store/authStore.jsx"
+import { useFavoritesStore } from "../store/favoritesStore.jsx"
+
+export function Header() {
+    const {isLoggedIn} = useAuthStore()
+    const {countFavorites} = useFavoritesStore()
+    const numberOfFavorites = countFavorites()
+    return(
+        <header>
+            <Link href={'/'} style={{textDecoration: 'none', color: 'inherit'}}>
+                <h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-affiliate"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275" /><path d="M11.683 12.317l5.759 -5.759" /><path d="M5.5 5.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M18.5 5.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M18.5 18.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M8.5 15.5m-4.5 0a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0" /></svg>
+                    DevJobs
+                </h1>
+            </Link>
+            <nav>
+                <NavLink className={({isActive}) => isActive ? 'nav-link-active' : ""} to="/">Inicio</NavLink>
+                <NavLink className={({isActive}) => isActive ? 'nav-link-active' : ""} to="/search">Empleos</NavLink>
+                <NavLink className={({isActive}) => isActive ? 'nav-link-active' : ""} to="/contact">Contacto</NavLink>
+                {
+                    isLoggedIn && (
+                        <NavLink className={({isActive}) => isActive ? 'nav-link-active' : ''} 
+                        to="/profile">
+                            Profile ❤️{numberOfFavorites}
+                        </NavLink>
+                    )
+                }
+            </nav>
+
+            <HeaderUserButton/>
+    </header>
+    )
+}
+
+const HeaderUserButton = () => {
+    const {isLoggedIn, login, logout} = useAuthStore()
+    const {clearFavorites} = useFavoritesStore()
+    
+    const handleLogout =() => {
+        logout()
+        clearFavorites()
+    }
+    return(
+            isLoggedIn 
+            ? <button onClick={handleLogout}>Cerrar sesión</button>
+            : <button onClick={login}>Iniciar sesión</button>
+            
+        )
+}
+
+// export default Header

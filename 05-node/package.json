@@ -1,0 +1,10 @@
+{
+    "type": "module",
+    "name": "nodejs-intro",
+    "version": "1.0.0",
+    "main": "index.js",
+    "author": "Maicol",
+    "dependencies": {
+        "ms": "2.1.3"
+    }
+}

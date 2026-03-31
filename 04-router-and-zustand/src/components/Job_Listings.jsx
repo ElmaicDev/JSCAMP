@@ -1,4 +1,4 @@
-import JobCard from "../components/JobCard.jsx"
+import JobCard from "./JobCard.jsx"
 
 function Job_Listing({jobs}){
 

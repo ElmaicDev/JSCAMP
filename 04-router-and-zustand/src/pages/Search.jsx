@@ -3,35 +3,33 @@ import SearchFormSection from "../components/SearchFormSection.jsx"
 import Job_Listing from "../components/Job_Listings.jsx" //se puede cambiar el nombre como {Job_Listing as Job}
 import Pagination from "../components/Pagination.jsx"
 import { Modal } from "../components/Modal.jsx";
-import errorIcon from "../src/assets/icons/errorIcon.svg"
+import errorIcon from "../assets/icons/errorIcon.svg"
 import { getErrorMessage } from "../helpers/Errors.jsx";
-import { useRouter } from "../hooks/useRouter.jsx";
+import { Navigate, useSearchParams } from "react-router";
+import { BreadCrumb } from "../components/Breadcrumb"
 
 const RESULT_PER_PAGE = 4;
 
 const useFilter = () =>
     {
-    const initialFilterData = () => {
-        const params = new URLSearchParams(window.location.search)
-        return {
-            technology: params.get('tecnology') || '',
-            location: params.get('type') || '',
-            experienceLevel: params.get('level') || ''
-        }
-    }
+
+    const [searchParams, setSearchParams] = useSearchParams()
+
     const [filters,setFilters] = useState(() => {
         const saved = window.localStorage.getItem('jobsFilters')
-        return saved ? JSON.parse(saved) : initialFilterData
-    })
-    const [textToFilter, setTextToFilter] = useState(() => {
-        const params = new URLSearchParams(window.location.search)
-        return params.get('text') || ''
+        return saved ? JSON.parse(saved) : {
+            technology: searchParams.get('technology') || '',
+            location: searchParams.get('type') || '',
+            experienceLevel: searchParams.get('level') || ''
+        }
     })
 
+    // Si se inicializa, con una arrow function, este componente solo se ejecuta una vez, sino, si se pone directamente searchParams, se renderiza siempre.
+    const [textToFilter, setTextToFilter] = useState(() => searchParams.get('text') || '') // sin las llaves ni el return, lo que retorna la arrow function es la primer expresion.
+
     const [currentPage, setCurrentPage] = useState(() => {
-        const params = new URLSearchParams(window.location.search)
-        const page = Number(params.get('page'))
-        return Number.isNaN(page) ? page : 1
+        const page = Number(searchParams.get('page')) 
+        return Number.isNaN(page) || page == 0? 1 : page
     })
 
    
@@ -43,13 +41,20 @@ const useFilter = () =>
     const [fetchErrors, setFetchErrors] = useState(null)
     const totalPages = Math.ceil(total / RESULT_PER_PAGE)
 
-    const {navigateTo} = useRouter()
 
     const handleClearFilters = () =>{
 
-        setFilters(initialFilterData)
+
+        setFilters({
+            technology:  '',
+            location: '',
+            experienceLevel:  ''
+        })
+       
+        setTextToFilter('')
         window.localStorage.removeItem('jobsFilters')
-        return setHasActiveFilters(false);
+        setHasActiveFilters(false);
+        setCurrentPage(1)
     }
 
     
@@ -67,7 +72,7 @@ const useFilter = () =>
                 if(textToFilter) params.append('text', textToFilter)
                 if(filters.technology) params.append('technology', filters.technology)
                 if(filters.location) params.append('type', filters.location)
-                if(filters.experience) params.append('level', filters.experience)
+                if(filters.experienceLevel) params.append('level', filters.experienceLevel)
                 
                 const offset = (currentPage - 1) * RESULT_PER_PAGE
                 params.append('limit', RESULT_PER_PAGE) // la cantidad de resultados por página
@@ -102,35 +107,47 @@ const useFilter = () =>
 
     useEffect(() => {
 
-        const params = new URLSearchParams()
-        if(textToFilter) params.append('text',textToFilter)
-        if(filters.technology) params.append('technology', filters.technology)
-        if(filters.location) params.append('type', filters.location)
-        if(filters.experience) params.append('level', filters.experience)
-        
-        if(currentPage > 1) params.append('page', currentPage)
+        setSearchParams((params) => {
+            //acá antes de .set era un append, pero porque ya no necesita agregarlos sino setearlos
+            if(textToFilter) params.set('text',textToFilter)
+            else params.delete('text')
+            if(filters.technology) params.set('technology', filters.technology)
+            else params.delete('technology')
+            if(filters.location) params.set('type', filters.location)
+            else params.delete('type')
+            if(filters.experienceLevel) params.set('level', filters.experienceLevel)
+            else params.delete('level')
+            
+            if(currentPage > 1) params.set('page', currentPage)
+    
+            return params
 
-        const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname
+            // esto ya no se necesita porque SetSearchParams, solo necesita devolver los nuevos parámetros
+            // const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname
+    
+            // navigateTo(newUrl)
+        })
 
-        navigateTo(newUrl)
+        },[filters,textToFilter,currentPage,setSearchParams])
 
-        },[filters,textToFilter,currentPage,navigateTo])
+    // Este efecto me está haciendo un problema porque a veces guarda ciudad de méxico pero no actualiza bien.
+    // useEffect(() => {
+    //     window.localStorage.setItem('jobsFilters', JSON.stringify(filters))
 
-    useEffect(() => {
-        window.localStorage.setItem('jobsFilters', JSON.stringify(filters))
+    // },[filters])
 
-    },[filters])
-
-    const handlePageChange = (page) => { 
-        console.log(page)
+    const handlePageChange = (page) => {   
         setCurrentPage(page)
+        if(page > 1) searchParams.set('page', page)
+        else searchParams.delete('page')
     }
 
         
     const handleSearch = (filters) => {
-        setCurrentPage(1)
-        setFilters(filters)
         setHasActiveFilters(true)
+        setCurrentPage(1)
+        searchParams.delete('page')
+        setFilters(filters)
     }
 
     const handleTextFilter = (newTextToFilter) =>{
@@ -139,6 +156,8 @@ const useFilter = () =>
         setTextToFilter(newTextToFilter.toLowerCase()) 
         console.log(textToFilter)
         setCurrentPage(1)
+        searchParams.delete('page')
+
     }
     return {
         loading,
@@ -157,7 +176,7 @@ const useFilter = () =>
     }
 }
 
-export function SearchPage() {
+export default function SearchPage() {
 
     const{
         jobs,
@@ -180,9 +199,15 @@ export function SearchPage() {
   return (
     <>
     <main>
+        
         <title>{title}</title>
         <meta name="description" content = "Explora miles de oportunidades laborales en el sector tecnológico. Encuentra tu próximo trabajo en DEVJOBS"/>
-        <SearchFormSection initialText = {textToFilter} onSearch={handleSearch} onTextFilter = {handleTextFilter} onClearFilters={handleClearFilters} hasAtiveFilters={hasActiveFilters}/>
+        <BreadCrumb/>
+        <SearchFormSection 
+            initialText = {textToFilter} 
+            onSearch={handleSearch} 
+            onTextFilter = {handleTextFilter} 
+            onClearFilters={handleClearFilters} hasActiveFilters={hasActiveFilters}/>
         
         <section>
             <h2 style={{textAlign:'center'}}>Resultados de Búsqueda</h2>
