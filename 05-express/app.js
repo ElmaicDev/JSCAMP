@@ -13,10 +13,12 @@ const app = express();
 app.use(middlewareCors());
 app.use(express.json()) // esto es un middleware que se encarga de parsear el body de las peticiones que llegan al servidor, para que podamos acceder a ellos desde req.body
 
-app.use('/', jobsRouter) 
+app.use('/jobs', jobsRouter) 
 
 
 app.listen(PORT, () => {
 
     console.log(`servidor levantado en http://localhost:${PORT}`);
 })
+
+export default app

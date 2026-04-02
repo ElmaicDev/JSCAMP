@@ -1,8 +1,11 @@
+import jobs from '../jobs.json' with {type: 'json'}
+import { JobModel } from '../models/job.js';
+import { DEFAULT } from '../config.js';
+
 export class jobController {
 
     static async getAll(req, res){
         const {text, title, level, limit = DEFAULT.LIMIT_PAGINATION, tecnology, offset = DEFAULT.LIMIT_OFFSET} = req.query;
-            
         const paginatedJobs = await JobModel.getAll({text, title, level, limit, tecnology, offset})    
         return res.json(paginatedJobs)
     }

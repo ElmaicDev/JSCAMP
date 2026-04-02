@@ -21,7 +21,12 @@ export class JobModel {
         
             const paginatedJobs = filteredJobs.slice(offsetNumber, offsetNumber + limitNumber)
 
-            return paginatedJobs
+            return {data: paginatedJobs,
+                    total: filteredJobs.length,
+                    limit: limitNumber,
+                    offset: offsetNumber
+
+            }
     }
 
     static async create({titulo, empresa, ubicacion, data}){
