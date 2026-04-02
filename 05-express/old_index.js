@@ -1,30 +1,22 @@
 import express from 'express';
 import jobs from './jobs.json' with {type: 'json'}
-import cors from 'cors';
-
 import { DEFAULT } from './config.js';
-
-// estos son los origenes aceptados
-const ACCEPTED_ORIGINS = ['http://localhost:5173', 'http://localhost:1234']
-
-// si se usa cors con * todo el mundo la puede usar.
-app.use(cors({
-    origin: (origin, callback) => {
-        if(ACCEPTED_ORIGINS.includes(origin)) {
-            return callback(null, true)
-        }
-        return callback(new Error('Origen no permitido'))
-    }
-}))
 
 const PORT = process.env.PORT || DEFAULT.PORT;
 const app = express();
-app.use(express.json()) // esto es un middleware que se encarga de parsear el body de las peticiones que llegan al servidor, para que podamos acceder a ellos desde req.body
+
+    
 
 
+//Acá el middleware se ejecuta antes de que se ejecute cualquier ruta, por lo tanto, se ejecutará para cada petición que llegue al servidor
+app.use((req,res, next) => {
+    const timeString = new Date().toLocaleDateString()
+    console.log(`[${timeString}] ${req.method} ${req.url}`);
+    next();
+})
 
 app.get('/', (req, res) => {
-   
+    res.send('Hello World!');
 })
 
 app.get('/health', (req, res) => {
@@ -59,28 +51,14 @@ app.get('/jobs', (req, res)=> {
 
 app.get('/jobs/:id', (req, res) => {
     const { id } = req.params;
-    const job = jobs.find(job => job.id === id);
-    if(!job) {
-        return res.status(404).json({error: 'Job not found'})
-    }
+    return res.json({
+        job: {
+            id,
+            title: ' job with id ' + id,
 
-    return res.json(job)
+        }
+    })
 })
-
-app.post("/jobs", (req, res) => {
-    const {titulo, empresa, ubicacion, data} = req.body
-
-    const newJob = {
-        id: crypto.randomUUID(),
-        titulo,
-        empresa,
-        ubicacion,
-        data
-    }
-    jobs.push(newJob) // esto se hará en la base de datos.
-    return res.status(201).json(newJob)
-})
-
 
 app.delete('/jobs/:id', (req, res) => {
 
@@ -88,6 +66,9 @@ app.delete('/jobs/:id', (req, res) => {
 })
 
 
+app.post("/jobs", (req, res) => {
+
+})
 
 // Reemplazar un recurso completo
 app.put("/jobs/:id", (req, res) => {
@@ -99,8 +80,20 @@ app.patch("/jobs/:id", (req, res) => {
 
 })
 
+// Ruta Opcional -> /acd o /abcd
+app.get('/a{b}cd', (req, res) => {
+    return res.send('Ruta opcional');
+})
 
+// Ruta con comodín -> /abxcd, /ab123cd, etc., es sobre todo para rutas que son largas
+app.get('/ab*cd', (req, res) => {
+    return res.send('Ruta con comodín');
+})
 
+//Rutas con regex - toda ruta que termina en fly
+app.get(/.*fly$/, (req, res) => {
+    return res.send('Ruta con regex');
+})
 
 
 
