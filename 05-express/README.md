@@ -62,7 +62,14 @@ Todo en el mismo index.js entonces se debe separar. Para usar Modelo Vista Contr
 
 En vercel se puede desplegar proyectos de express sumamente fácil y tiene una capa gratuita generosa (02042026)
 
+* VERCEL ES AUTOESCALABLE
+* ROLLBACKS INSTANTÁNEO
+
 Para desplegar express se deben seguir unos pasos específicos:
 
 1. Exportar por defecto app. de app.js
-2. app.listen solo se usa en desarrollo, no en producción entonces se debe meter a un condicional
+2. app.listen solo se usa en desarrollo, no en producción entonces se debe meter a un condicional. Para esto se deben crear también las variables de entorno. De development o production.
+3. Instalar la línea de comandos de vercel.
+   con npm i -g vercel
+4. Usar en la línea de comandos de vercel: vercel login
+5. Te pedirá autenticación de tu cuenta.
