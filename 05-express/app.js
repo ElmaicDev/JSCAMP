@@ -15,7 +15,7 @@ app.use(express.json()) // esto es un middleware que se encarga de parsear el bo
 
 app.use('/jobs', jobsRouter) 
 
-if(process.env.NODE_ENV !== 'production') {
+if(!process.env.NODE_ENV) {
 app.listen(PORT, () => {
 
     console.log(`servidor levantado en http://localhost:${PORT}`);
